@@ -6,7 +6,7 @@
 // p5.js reference: https://p5js.org/reference/
 
 // Database (CHANGE THESE!)
-const GROUP_NUMBER        = 0;      // Add your group number here as an integer (e.g., 2, 3)
+const GROUP_NUMBER        = 11;      // Add your group number here as an integer (e.g., 2, 3)
 const RECORD_TO_FIREBASE  = false;  // Set to 'true' to record user results to Firebase
 
 // Pixel density and setup variables (DO NOT CHANGE!)
@@ -32,6 +32,8 @@ let attempt               = 0;      // users complete each test twice to account
 // Target list
 let targets               = [];
 
+let categories = [];
+
 // Ensures important data is loaded before the program starts
 function preload()
 {
@@ -48,10 +50,32 @@ function setup()
   drawUserIDScreen();        // draws the user start-up screen (student ID and display size)
 }
 
+function drawMenu() {
+  let centerX = windowWidth / 2;
+  let centerY = windowHeight / 2;
+  let Width = 200;
+  let Height = 80;
+
+  let positions = [
+    { x: 0, y: 0 },
+    { x: windowWidth - Width, y: 0 },
+    { x: 0, y: windowHeight  - Height },
+    { x: windowWidth - Width, y: Height - Height },
+    { x: centerX - Width / 2, y: centerY - Height / 2 },
+  ];
+
+  let labels = ["fruit", "vegetable", "weird", "dairy", "juice"];
+
+  for (let i = 0; i < positions.length; i++) {
+    let pos = positions[i];
+    let label = labels[i];
+    categories[i] = buttons(pos.x, pos.y, Width, Height, label).draw();
+  }
+}
 // Runs every frame and redraws the screen
 function draw()
 {
-  if (draw_targets && attempt < 2)
+  if (draw_targets && attempt < 2) //(draw_targets && attempt < 2)
   {     
     // The user is interacting with the 6x3 target grid
     background(color(0,0,0));        // sets background to black
@@ -59,11 +83,11 @@ function draw()
     // Print trial count at the top left-corner of the canvas
     textFont("Arial", 16);
     fill(color(255,255,255));
-    textAlign(LEFT);
+    textAlign(CENTER, TOP);
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
         
     // Draw all targets
-	for (var i = 0; i < legendas.getRowCount(); i++) targets[i].draw();
+	  for (var i = 0; i < legendas.getRowCount(); i++) targets[i].draw();
     
     // Draw the target label to be selected in the current trial
     textFont("Arial", 20);

@@ -16,19 +16,18 @@ class Target
   {
     return dist(this.x, this.y, mouse_x, mouse_y) < this.width / 2;
   }
-  
+
   // Draws the target (i.e., a circle)
   // and its label
   draw()
   {
-    // Draw target
-    fill(color(155,155,155));                 
-    circle(this.x, this.y, this.width);
-    
-    // Draw label
+    // Draw the rectangle
+    fill(color(155,155,155));
+    rect(pos.x, pos.y, rectWidth, rectHeight);
+     //draw the label
     textFont("Arial", 12);
     fill(color(255,255,255));
     textAlign(CENTER);
-    text(this.label, this.x, this.y);
+    text(this.label, this.x + rectWidth/2, this.y + rectHeight/2);
   }
 }
