@@ -9,9 +9,6 @@
 const GROUP_NUMBER = 11; // Add your group number here as an integer (e.g., 2, 3)
 const RECORD_TO_FIREBASE = false; // Set to 'true' to record user results to Firebase
 
-// Screen
-let currentScreen = ""; // 0 = Main Menu, 1 = Veggies, 2 = Dairy 3 = Weird 4 = Fruit 5 = Juice
-
 // Pixel density and setup variables (DO NOT CHANGE!)
 let PPI, PPCM;
 const NUM_OF_TRIALS = 12; // The numbers of trials (i.e., target selections) to be completed
@@ -32,109 +29,17 @@ let trials; // contains the order of targets that activate in the test
 let current_trial = 0; // the current trial number (indexes into trials array above)
 let attempt = 0; // users complete each test twice to account for practice (attemps 0 and 1)
 
+let last_first_letter = "";
 // Target list
 let targets = [];
 
-let categories = [];
-
-const fruits = [
-  5, // Avocado
-  6, // Banana
-  11, // Cantaloupe
-  21, // Conference (Pear)
-  0, // Golden (Apple)
-  1, // Granny Smith (Apple)
-  12, // Galia Melon
-  7, // Kiwi
-  8, // Lemon
-  9, // Lime
-  10, // Mango
-  13, // Melon
-  15, // Nectarine
-  16, // Orange
-  17, // Papaya
-  18, // Passion Fruit
-  2, // Pink Lady (Apple)
-  19, // Peach
-  20, // Anjou (Pear)
-  23, // Pineapple
-  24, // Plum
-  25, // Pomegranate
-  3, // Red Delicious (Apple)
-  26, // Red Grapefruit
-  22, // Kaiser (Pear)
-  27, // Satsumas
-  4, // Royal Gala (Apple)
-  14, // Watermelon
-  77, // Tomato
-  76, // Beef Tomato
-  78, // Vine Tomato
+let ordered_list = [
+  38, 53, 20, 28, 58, 59, 5, 6, 76, 37, 42, 41, 40, 39, 61, 18, 68, 69, 70, 71,
+  67, 9, 8, 10, 7, 11, 12, 13, 14, 2, 3, 1, 0, 4, 29, 33, 34, 36, 31, 30, 32,
+  35, 64, 63, 65, 46, 45, 60, 66, 22, 21, 23, 24, 25, 26, 19, 15, 17, 16, 27,
+  72, 73, 74, 75, 77, 78, 56, 52, 55, 57, 54, 51, 50, 44, 43, 49, 48, 47, 62,
+  79, 80,
 ];
-
-const juices = [
-  28, // Apple Juice
-  34, // Cherry Juice
-  33, // Fresh Juice
-  31, // Mango Juice
-  36, // Mandarin Juice
-  29, // Orange Juice
-  32, // Peach Juice
-  30, // Pear Juice
-  35, // Smoothie
-];
-
-const vegetables = [
-  58, // Asparagus
-  59, // Aubergine
-  60, // Cabbage
-  61, // Carrots
-  62, // Cucumber
-  63, // Garlic
-  64, // Ginger
-  65, // Leek
-  66, // Mushroom
-  67, // Yellow Onion
-  68, // Bell Pepper
-  71, // Mild Pepper
-  70, // Piri Piri
-  69, // Rocoto Pepper
-  72, // White Potato
-  73, // Red Potato
-  75, // Red Beet
-  74, // Sweet Potato
-  79, // Zucchini
-];
-
-const dairy = [
-  37, // Bio Fat Milk
-  41, // Bio Skim Milk
-  42, // Bio Milk
-  45, // Bio Cream
-  50, // Bio Soy Milk
-  38, // 0% Milk
-  53, // 0% Yoghurt
-  52, // Cherry Yoghurt
-  55, // Mango Yoghurt
-  39, // Fat Milk
-  56, // Pear Yoghurt
-  54, // Yoghurt
-  57, // Vanilla Yoghurt
-  40, // Standard Milk
-  47, // Sour Milk
-  46, // Sour Cream
-  44, // Oat Milk
-  43, // Oatghurt
-  49, // Soyghurt
-  48, // Bio Soyghurt
-  51, // Soy Milk
-];
-
-let lists = {
-  fruit: fruits,
-  vegetable: vegetables,
-  dairy: dairy,
-  juice: juices,
-};
 
 // Ensures important data is loaded before the program starts
 function preload() {
@@ -150,55 +55,24 @@ function setup() {
   drawUserIDScreen(); // draws the user start-up screen (student ID and display size)
 }
 
-function createMenu() {
-  let centerX = windowWidth / 2;
-  let centerY = windowHeight / 2;
-  let Width = 10 * PPCM;
-  let Height = 5 * PPCM;
-
-  let positions = [
-    { x: 0, y: 0 },
-    { x: windowWidth - Width, y: 0 },
-    { x: 0, y: windowHeight - Height },
-    { x: windowWidth - Width, y: windowHeight - Height },
-    { x: centerX - Width / 2, y: centerY - Height / 2 },
-  ];
-
-  let labels = ["fruit", "vegetable", "weird", "dairy", "juice"];
-
-  for (let i = 0; i < positions.length; i++) {
-    console.log(positions.length);
-    let pos = positions[i];
-    let label = labels[i];
-    categories.push(new buttons(pos.x, pos.y, Width, Height, label));
-  }
-  console.log(categories);
-}
 // Runs every frame and redraws the screen
 function draw() {
   if (draw_targets && attempt < 2) {
-    //(draw_targets && attempt < 2)
     // The user is interacting with the 6x3 target grid
     background(color(0, 0, 0)); // sets background to black
 
-    // Print trial count at the top center of the canvas
+    // Print trial count at the top left-corner of the canvas
     textFont("Arial", 16);
     fill(color(255, 255, 255));
-    textAlign(CENTER, TOP);
+    textAlign(LEFT);
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
-    if (currentScreen === "Main Menu") {
-      for (let i = 0; i < categories.length; i++) {
-        categories[i].draw();
-      }
-    } else if (currentScreen !== "Main Menu") {
-      for (var i = 0; i < lists[currentScreen].length; i++)
-        targets[lists[currentScreen][i]].draw();
-    }
-    // // Draw all targets
-    // for (var i = 0; i < legendas.getRowCount(); i++) targets[i].draw();
+
+    // Draw all targets
+    for (var i = 0; i < legendas.getRowCount(); i++) targets[i].draw();
+
     // Draw the target label to be selected in the current trial
     textFont("Arial", 20);
-    textAlign(CENTER, TOP);
+    textAlign(CENTER);
     text(legendas.getString(trials[current_trial], 0), width / 2, height - 20);
   }
 }
@@ -284,27 +158,17 @@ function mousePressed() {
   // Only look for mouse releases during the actual test
   // (i.e., during target selections)
   if (draw_targets) {
-    if (currentScreen === "Main Menu")
-      for (let i = 0; i < categories.length; i++) {
-        if (categories[i].clicked(mouseX, mouseY)) {
-          currentScreen = categories[i].label;
-          console.log(currentScreen);
-          break;
-        }
-      }
-    if (currentScreen !== "Main Menu")
-      for (var i = 0; i < legendas.getRowCount(); i++) {
-        // Check if the user clicked over one of the targets
-        if (targets[i].clicked(mouseX, mouseY)) {
-          // Checks if it was the correct target
-          if (targets[i].id === trials[current_trial]) hits++;
-          else misses++;
+    for (var i = 0; i < legendas.getRowCount(); i++) {
+      // Check if the user clicked over one of the targets
+      if (targets[i].clicked(mouseX, mouseY)) {
+        // Checks if it was the correct target
+        if (targets[i].id === trials[current_trial]) hits++;
+        else misses++;
 
-          current_trial++; // Move on to the next trial/target
-          currentScreen = "Main Menu";
-          break;
-        }
+        current_trial++; // Move on to the next trial/target
+        break;
       }
+    }
 
     // Check if the user has completed all trials
     if (current_trial === NUM_OF_TRIALS) {
@@ -345,41 +209,22 @@ function continueTest() {
 }
 
 // Creates and positions the UI targets
-function createTargets(
-  target_size,
-  horizontal_gap,
-  vertical_gap,
-  column,
-  row,
-  lista
-) {
+function createTargets(target_size, horizontal_gap, vertical_gap) {
   // Define the margins between targets by dividing the white space
   // for the number of targets minus one
-  h_margin = horizontal_gap / (column - 1);
-  v_margin = vertical_gap / (row - 1);
-
-  // Calculate the total width and height of the grid
-  let gridWidth = (column - 1) * h_margin + column * target_size;
-  let gridHeight = (row - 1) * v_margin + row * target_size;
-
-  // Calculate the starting point of the grid (top-left corner)
-  let startX = (width - gridWidth) / 2;
-  let startY = (height - gridHeight) / 2;
+  h_margin = horizontal_gap / (GRID_COLUMNS - 1);
+  v_margin = vertical_gap / (GRID_ROWS - 1);
 
   // Set targets in a 8 x 10 grid
-  for (var r = 0; r < row; r++) {
-    for (var c = 0; c < column; c++) {
-      if (c + column * r == lista.length) {
-        break;
-      }
-      let target_x = startX + (h_margin + target_size) * c + target_size / 2;
-      let target_y = startY + (v_margin + target_size) * r + target_size / 2;
+  for (var r = 0; r < GRID_ROWS; r++) {
+    for (var c = 0; c < GRID_COLUMNS; c++) {
+      let target_x = 40 + (h_margin + target_size) * c + target_size / 2; // give it some margin from the left border
+      let target_y = (v_margin + target_size) * r + target_size / 2;
 
       // Find the appropriate label and ID for this target
-      let legendas_index = c + column * r;
-      // console.log(legendas_index);
-      let target_label = legendas.getString(lista[legendas_index], 0);
-      let target_id = lista[legendas_index];
+      let legendas_index = c + GRID_COLUMNS * r;
+      let target_label = legendas.getString(ordered_list[legendas_index], 0);
+      let target_id = ordered_list[legendas_index];
 
       let target = new Target(
         target_x,
@@ -412,46 +257,13 @@ function windowResized() {
 
     // Creates and positions the UI targets according to the white space defined above (in cm!)
     // 80 represent some margins around the display (e.g., for text)
-    console.log(vegetables.length);
-    console.log(fruits.length);
-    console.log(juices.length);
-    console.log(dairy.length);
     createTargets(
       target_size * PPCM,
-      horizontal_gap * PPCM - vegetables.length,
-      vertical_gap * PPCM - vegetables.length,
-      4,
-      5,
-      vegetables
-    );
-    createTargets(
-      target_size * PPCM,
-      horizontal_gap * PPCM - fruits.length,
-      vertical_gap * PPCM - fruits.length,
-      5,
-      7,
-      fruits
-    );
-    createTargets(
-      target_size * PPCM,
-      horizontal_gap * PPCM - juices.length,
-      vertical_gap * PPCM - juices.length,
-      5,
-      2,
-      juices
-    );
-    createTargets(
-      target_size * PPCM,
-      horizontal_gap * PPCM - dairy.length,
-      vertical_gap * PPCM - dairy.length,
-      5,
-      5,
-      dairy
+      horizontal_gap * PPCM - 80,
+      vertical_gap * PPCM - 80
     );
 
     // Starts drawing targets immediately after we go fullscreen
-    createMenu();
     draw_targets = true;
-    currentScreen = "Main Menu";
   }
 }
