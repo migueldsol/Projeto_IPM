@@ -16,15 +16,20 @@ class Target {
 
   // Draws the target (i.e., a circle)
   // and its label
-  draw() {
+  draw(grey) {
     // Draw target
     fill(color(155, 155, 155));
     circle(this.x, this.y, this.width);
 
     // Draw label
+    textFont("Arial", 22, 60);
+    if (grey) {fill(color(255, 255, 255));}
+    else {fill(color(255, 0, 0));}
+    textAlign(CENTER, TOP);
+    if (!grey) {text(this.label[0], this.x, this.y - this.width / 3);}
     textFont("Arial", 12);
     fill(color(255, 255, 255));
-    textAlign(CENTER);
+    textAlign(CENTER, CENTER);
     text(this.label, this.x, this.y);
   }
 

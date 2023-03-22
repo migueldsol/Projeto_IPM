@@ -7,7 +7,7 @@
 
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 11; // Add your group number here as an integer (e.g., 2, 3)
-const RECORD_TO_FIREBASE = false; // Set to 'true' to record user results to Firebase
+const RECORD_TO_FIREBASE = true; // Set to 'true' to record user results to Firebase
 
 // Pixel density and setup variables (DO NOT CHANGE!)
 let PPI, PPCM;
@@ -32,9 +32,13 @@ let attempt = 0; // users complete each test twice to account for practice (atte
 let last_first_letter = "";
 // Target list
 let targets = [];
-
-let ordered_list = [38, 53, 20, 28, 58, 59, 5, 6, 76, 68, 45, 37, 42, 41, 50, 48, 60, 11, 61, 34, 52, 21, 62, 39, 33, 12, 63, 64, 0, 1, 22, 7, 65, 8, 9, 36, 10, 31, 55, 13, 71, 66, 15, 44, 43, 16, 29, 17, 18, 19, 32, 30, 56, 23, 2, 70, 24, 25, 75, 3, 26, 73, 69, 4, 27, 35, 46, 47, 51, 49, 40, 74, 77, 57, 78, 14, 72, 67, 54, 79];
-
+let grey = true;
+let ordered_list = [
+  38, 53, 20, 28, 58, 59, 5, 6, 76, 68, 45, 37, 42, 41, 50, 48, 60, 11, 61, 34,
+  52, 21, 62, 39, 33, 12, 63, 64, 0, 1, 22, 7, 65, 8, 9, 36, 10, 31, 55, 13, 71,
+  66, 15, 44, 43, 16, 29, 17, 18, 19, 32, 30, 56, 23, 2, 70, 24, 25, 75, 3, 26,
+  73, 69, 4, 27, 35, 46, 47, 51, 49, 40, 74, 77, 57, 78, 14, 72, 67, 54, 79,
+];
 
 // Ensures important data is loaded before the program starts
 function preload() {
@@ -63,10 +67,22 @@ function draw() {
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
 
     // Draw all targets
-    for (var i = 0; i < legendas.getRowCount(); i++) targets[i].draw();
+    for (var i = 0; i < legendas.getRowCount(); i++) {
+      if (
+        i != 0 &&
+        targets[i].label[0] != targets[i - 1].label[0] &&
+        grey == true
+      ) {
+        grey = false;
+      } else if (grey == false) {
+        grey = true;
+      }
+      targets[i].draw(grey);
+    }
 
     // Draw the target label to be selected in the current trial
     textFont("Arial", 20);
+    fill(color(255, 255, 255));
     textAlign(CENTER);
     text(legendas.getString(trials[current_trial], 0), width / 2, height - 20);
   }
