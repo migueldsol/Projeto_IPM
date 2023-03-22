@@ -38,6 +38,7 @@ let buttons = [];
 
 let screen_height = 0;
 let screen_width = 0;
+let current_menu = "";
 
 const orderedIdByName = [
   38, //0% Milk
@@ -119,7 +120,7 @@ const orderedIdByName = [
   72, //White Potato
   67, //Yellow Onion
   54, //Yoghurt
-  79 //Zucchini
+  79, //Zucchini
 ];
 
 const fruitsList = [
@@ -220,8 +221,28 @@ const weirdList = [];
 function preload() {
   legendas = loadTable("legendas.csv", "csv", "header");
 }
-function buttonSetup(firstPosition, horizontal_gap, vertical_gap, targetSize) {
-  console.log(firstPosition);
+function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
+  h_margin = horizontal_gap / (GRID_COLUMNS - 1);
+  v_margin = vertical_gap / (GRID_ROWS - 1);
+  let firstPosition = {
+    //top right corner
+    vegetables: [
+      windowWidth - targetSize / 2 - targetSize * 4 - 40 - h_margin * 4,
+      targetSize / 2 + 40,
+    ],
+    dairy: [
+      windowWidth - targetSize / 2 - targetSize * 4 - 40 - h_margin * 4,
+      windowHeight - targetSize / 2 - targetSize * 4 - 40 - v_margin * 4,
+    ],
+    fruits: [targetSize / 2 + 40, targetSize / 2 + 40],
+    juices: [
+      targetSize / 2 + 40,
+      windowHeight - targetSize / 2 - targetSize * 4 - 40 - v_margin * 4,
+    ],
+    weird: 0,
+  };
+
+  createTargets(targetSize, horizontal_gap, vertical_gap);
   let centerX = displayWidth / 2;
   let centerY = displayHeight / 2;
   let Width = 10 * PPCM;
@@ -229,7 +250,18 @@ function buttonSetup(firstPosition, horizontal_gap, vertical_gap, targetSize) {
 
   //creates buttons
   //Top left corner
-  let fruits = new ButtonCat(0, 0, Width, Height, "fruits", fruitsList);
+  let fruits = new ButtonCat(
+    0,
+    0,
+    Width,
+    Height,
+    "fruits",
+    fruitsList,
+    h_margin,
+    v_margin,
+    firstPosition,
+    targetSize
+  );
   //Top right corner
   let vegetables = new ButtonCat(
     windowWidth - Width,
@@ -238,12 +270,12 @@ function buttonSetup(firstPosition, horizontal_gap, vertical_gap, targetSize) {
     Height,
     "vegetables",
     vegetablesList,
-    horizontal_gap,
-    vertical_gap,
+    h_margin,
+    v_margin,
     firstPosition,
     targetSize
   );
-  //Top down corner
+  //bottom left corner
   let juices = new ButtonCat(
     0,
     windowHeight - Height,
@@ -251,8 +283,8 @@ function buttonSetup(firstPosition, horizontal_gap, vertical_gap, targetSize) {
     Height,
     "juices",
     juicesList,
-    horizontal_gap,
-    vertical_gap,
+    h_margin,
+    v_margin,
     firstPosition,
     targetSize
   );
@@ -264,8 +296,8 @@ function buttonSetup(firstPosition, horizontal_gap, vertical_gap, targetSize) {
     Height,
     "dairy",
     dairyList,
-    horizontal_gap,
-    vertical_gap,
+    h_margin,
+    v_margin,
     firstPosition,
     targetSize
   );
@@ -277,8 +309,8 @@ function buttonSetup(firstPosition, horizontal_gap, vertical_gap, targetSize) {
     Height,
     "weird",
     weirdList,
-    horizontal_gap,
-    vertical_gap,
+    h_margin,
+    v_margin,
     firstPosition,
     targetSize
   );
@@ -288,7 +320,6 @@ function buttonSetup(firstPosition, horizontal_gap, vertical_gap, targetSize) {
   buttons.push(juices);
   buttons.push(milks);
   buttons.push(weirds);
-  console.log(fruits);
 }
 
 // Runs once at the start
@@ -460,24 +491,42 @@ function mousePressed() {
     for (var i = 0; i < 5; i++) {
       // Check if the user clicked over one of the buttons
       if (buttons[i].clicked(mouseX, mouseY)) {
-        j = 0;
-        k = 0;
-        changeIdList = buttons[i].getTargets();
-        //positionList = buttons[i].getPositionList();
-        while (j < legendas.getRowCount() || k > changeIdList.length) {
-          if (targets[j].getId() == changeIdList[k]) {
-            //targets[j].alterTarget(positionList[k][0], positionList[k][1]);
-            targets[j].makeDrawable();
-            k++;
-
-          }
-          j++;
+        let temp_targets = buttons[i].getTargets();
+        let temp_position = buttons[i].getPositionList();
+        for (var j = 0; j < temp_targets.length; j++) {
+          targets[temp_targets[j]].alterTarget(
+            temp_position[j][0],
+            temp_position[j][1]
+          );
         }
+        current_menu = buttons[i].getLabel();
       }
+      draw_menu = false;
+      draw_targets = true;
     }
-    draw_menu = false;
-    draw_targets = true;
   }
+
+  // if (draw_menu) {
+  //   for (var i = 0; i < 5; i++) {
+  //     // Check if the user clicked over one of the buttons
+  //     if (buttons[i].clicked(mouseX, mouseY)) {
+  //       j = 0;
+  //       k = 0;
+  //       changeIdList = buttons[i].getTargets();
+  //       //positionList = buttons[i].getPositionList();
+  //       while (j < legendas.getRowCount() || k > changeIdList.length) {
+  //         if (targets[j].getId() == changeIdList[k]) {
+  //           //targets[j].alterTarget(positionList[k][0], positionList[k][1]);
+  //           targets[j].makeDrawable();
+  //           k++;
+  //         }
+  //         j++;
+  //       }
+  //     }
+  // }
+  //   draw_menu = false;
+  //   draw_targets = true;
+  // }
   //TODO add verify of button
 }
 
@@ -497,51 +546,51 @@ function continueTest() {
   draw_menu = true;
 }
 
-// // Creates and positions the UI targets
-// function createTargets(target_size) {
-//   // Creates targets
-//   for (var i = 0; i < legendas.getRowCount(); i++) {
-//     id = orderedIdByName[i];
-//     let target_label = legendas.getString(id, 0);
-//     let target_id = legendas.getNum(id, 1);
-
-//     let target = new Target(0, 0, target_size, target_label, target_id);
-//     targets.push(target);
-//   }
-// }
-
 // Creates and positions the UI targets
-function createTargets(target_size, horizontal_gap, vertical_gap) {
-  // Define the margins between targets by dividing the white space
-  // for the number of targets minus one
-  h_margin = horizontal_gap / (GRID_COLUMNS - 1);
-  v_margin = vertical_gap / (GRID_ROWS - 1);
+function createTargets(target_size) {
+  // Creates targets
+  for (var i = 0; i < legendas.getRowCount(); i++) {
+    id = orderedIdByName[i];
+    let target_label = legendas.getString(id, 0);
+    let target_id = legendas.getNum(id, 1);
 
-  // Set targets in a 8 x 10 grid
-  i = 0;
-  for (var r = 0; r < GRID_ROWS; r++) {
-    for (var c = 0; c < GRID_COLUMNS; c++) {
-      let target_x = 40 + (h_margin + target_size) * c + target_size / 2; // give it some margin from the left border
-      let target_y = (v_margin + target_size) * r + target_size / 2;
-
-      // Find the appropriate label and ID for this target
-      let legendas_index = orderedIdByName[i];
-      let target_label = legendas.getString(legendas_index, 0);
-      let target_id = legendas.getNum(legendas_index, 1);
-
-      let target = new Target(
-        target_x,
-        target_y + 40,
-        target_size,
-        target_label,
-        target_id
-      );
-      targets.push(target);
-      console.log(target);
-      i++;
-    }
+    let target = new Target(0, 0, target_size, target_label, target_id);
+    targets.push(target);
   }
 }
+
+// Creates and positions the UI targets
+// function createTargets(target_size, horizontal_gap, vertical_gap) {
+//   // Define the margins between targets by dividing the white space
+//   // for the number of targets minus one
+//   h_margin = horizontal_gap / (GRID_COLUMNS - 1);
+//   v_margin = vertical_gap / (GRID_ROWS - 1);
+
+//   // Set targets in a 8 x 10 grid
+//   i = 0;
+//   for (var r = 0; r < GRID_ROWS; r++) {
+//     for (var c = 0; c < GRID_COLUMNS; c++) {
+//       let target_x = 40 + (h_margin + target_size) * c + target_size / 2; // give it some margin from the left border
+//       let target_y = (v_margin + target_size) * r + target_size / 2;
+
+//       // Find the appropriate label and ID for this target
+//       let legendas_index = orderedIdByName[i];
+//       let target_label = legendas.getString(legendas_index, 0);
+//       let target_id = legendas.getNum(legendas_index, 1);
+
+//       let target = new Target(
+//         target_x,
+//         target_y + 40,
+//         target_size,
+//         target_label,
+//         target_id
+//       );
+//       targets.push(target);
+//       console.log(target);
+//       i++;
+//     }
+//   }
+// }
 
 //function givePostion(button)
 
@@ -558,45 +607,16 @@ function windowResized() {
     // Below we find out out white space we can have between 2 cm targets
     screen_width = display.width * 2.54; // screen width
     screen_height = display.height * 2.54; // screen height
-    let target_size = 2; // sets the target size (will be converted to cm when passed to createTargets)
+    let target_size = 4; // sets the target size (will be converted to cm when passed to createTargets)
     let horizontal_gap = screen_width - target_size * GRID_COLUMNS; // empty space in cm across the x-axis (based on 10 targets per row)
     let vertical_gap = screen_height - target_size * GRID_ROWS; // empty space in cm across the y-axis (based on 8 targets per column)
-    console.log(PPCM);
-
-    // let firstPosition = {
-    //   //top right corner
-    //   vegetables: [
-    //     screen_width -
-    //       target_size / 2 -
-    //       0.2 -
-    //       target_size * 4 -
-    //       horizontal_gap * 4,
-    //     target_size / 2 + 0.2,
-    //   ],
-    //   dairy: [
-    //     target_size / 2 + 0.2,
-    //     target_size / 2 + 0.2 + 4 * target_size + 4 * vertical_gap,
-    //   ],
-    //   fruits: [target_size / 2 + 0.2, target_size / 2 + 0.2],
-    //   juices: [
-    //     screen_width -
-    //       target_size / 2 -
-    //       0.2 -
-    //       target_size * 4 -
-    //       horizontal_gap * 4,
-    //     screen_height - target_size / 2 - 0.2 - target_size * 4 - vertical_gap,
-    //   ],
-    //   weird: 0,
-    // };
-
-    createTargets(
-      target_size * PPCM,
-      horizontal_gap * PPCM - 80,
-      vertical_gap * PPCM - 80
-    );
 
     draw_menu = true;
-    buttonSetup(123, horizontal_gap, vertical_gap, target_size);
+    buttonSetup(
+      horizontal_gap * PPCM - 80,
+      vertical_gap * PPCM - 80,
+      target_size * PPCM
+    );
 
     // Creates and positions the UI targets according to the white space defined above (in cm!)
     // 80 represent some margins around the display (e.g., for text)
