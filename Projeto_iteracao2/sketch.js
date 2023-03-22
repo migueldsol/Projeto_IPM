@@ -40,44 +40,120 @@ let screen_height = 0;
 let screen_width = 0;
 
 const orderedIdByName = [
-  38, 53, 20, 28, 58, 59, 5, 6, 76, 68, 45, 37, 42, 41, 50, 48, 60, 11, 61, 34,
-  52, 21, 62, 39, 33, 12, 63, 64, 0, 1, 22, 7, 65, 8, 9, 36, 10, 31, 55, 13, 71,
-  66, 15, 44, 43, 16, 29, 17, 18, 19, 32, 30, 56, 23, 2, 70, 24, 25, 75, 3, 26,
-  73, 69, 4, 27, 35, 46, 47, 51, 49, 40, 74, 77, 57, 78, 14, 72, 67, 54, 79,
+  38, //0% Milk
+  53, //0% Yoghurt
+  20, //Anjou
+  28, //Apple Juice
+  58, //Asparagus
+  59, //Aubergine
+  5, //Avocado
+  6, //Banana
+  76, //Beef Tomato
+  68, //Bell Pepper
+  45, //Bio Cream
+  37, //Bio Fat Milk
+  42, //Bio Milk
+  41, //Bio Skim Milk
+  50, //Bio Soy Milk
+  48, //Bio Soyghurt
+  60, //Cabbage
+  11, //Cantaloupe
+  61, //Carrots
+  34, //Cherry Juice
+  52, //Cherry Yoghurt
+  21, //Conference
+  62, //Cucumber
+  39, //Fat Milk
+  33, //Fresh Juice
+  12, //Galia Melon
+  63, //Garlic
+  64, //Ginger
+  0, //Golden
+  1, //Granny Smith
+  22, //Kaiser
+  7, //Kiwi
+  65, //Leek
+  8, //Lemon
+  9, //Lime
+  36, //Mandarin Juice
+  10, //Mango
+  31, //Mango Juice
+  55, //Mango Yoghurt
+  13, //Melon
+  71, //Mild Pepper
+  66, //Mushroom
+  15, //Nectarine
+  44, //Oat Milk
+  43, //Oatghurt
+  16, //Orange
+  29, //Orange Juice
+  17, //Papaya
+  18, //Passion Fruit
+  19, //Peach
+  32, //Peach Juice
+  30, //Pear Juice
+  56, //Pear Yoghurt
+  23, //Pineapple
+  2, //Pink Lady
+  70, //Piri Piri
+  24, //Plum
+  25, //Pomegranate
+  75, //Red Beet
+  3, //Red Delicious
+  26, //Red Grapefruit
+  73, //Red Potato
+  69, //Rocoto Pepper
+  4, //Royal Gala
+  27, //Satsumas
+  35, //Smoothie
+  46, //Sour Cream
+  47, //Sour Milk
+  51, //Soy Milk
+  49, //Soyghurt
+  40, //Standard Milk
+  74, //Sweet Potato
+  77, //Tomato
+  57, //Vanilla Yoghurt
+  78, //Vine Tomato
+  14, //Watermelon
+  72, //White Potato
+  67, //Yellow Onion
+  54, //Yoghurt
+  79 //Zucchini
 ];
 
 const fruitsList = [
-  20, // Anjou (Pear)
-  5, // Avocado
-  6, // Banana
-  76, // Beef Tomato
-  11, // Cantaloupe
-  21, // Conference (Pear)
-  12, // Galia Melon
-  0, // Golden
-  1, // Granny Smith
-  22, // Kaiser (Pear)
-  7, // Kiwi
-  8, // Lemon
-  9, // Lime
-  10, // Mango
-  13, // Melon
-  15, // Nectarine
-  16, // Orange
-  17, // Papaya
-  18, // Passion Fruit
-  19, // Peach
-  2, // Pink Lady (Apple)
-  23, // Pineapple
-  24, // Plum
-  25, // Pomegranate
-  3, // Red Delicious (Apple)
-  26, // Red Grapefruit
-  4, // Royal Gala (Apple)
-  27, // Satsumas
-  77, // Tomato
-  78, // Vine Tomato
-  14, // Watermelon
+  20, //Anjou (Pear)
+  5, //Avocado
+  6, //Banana
+  76, //Beef Tomato
+  11, //Cantaloupe
+  21, //Conference (Pear)
+  12, //Galia Melon
+  0, //Golden
+  1, //Granny Smith
+  22, //Kaiser (Pear)
+  7, //Kiwi
+  8, //Lemon
+  9, //Lime
+  10, //Mango
+  13, //Melon
+  15, //Nectarine
+  16, //Orange
+  17, //Papaya
+  18, //Passion Fruit
+  19, //Peach
+  23, //Pineapple
+  2, //Pink Lady (Apple)
+  24, //Plum
+  25, //Pomegranate
+  3, //Red Delicious (Apple)
+  26, //Red Grapefruit
+  4, //Royal Gala (Apple)
+  27, //Satsumas
+  77, //Tomato
+  78, //Vine Tomato
+  14, //Watermelon
 ];
 
 const juicesList = [
@@ -93,49 +169,49 @@ const juicesList = [
 ];
 
 const vegetablesList = [
-  58, // Asparagus
-  59, // Aubergine
-  68, // Bell Pepper
-  60, // Cabbage
-  61, // Carrots
-  62, // Cucumber
-  63, // Garlic
-  64, // Ginger
-  65, // Leek
-  66, // Mushroom
-  71, // Mild Pepper
-  70, // Piri Piri
-  69, // Rocoto Peppe
-  73, // Red Potato
-  75, // Red Beet
-  74, // Sweet Potato
-  72, // White Potato
-  67, // Yellow Onion
-  79, // Zucchini
+  58, //Asparagus
+  59, //Aubergine
+  68, //Bell Pepper
+  60, //Cabbage
+  61, //Carrots
+  62, //Cucumber
+  63, //Garlic
+  64, //Ginger
+  65, //Leek
+  71, //Mild Pepper
+  66, //Mushroom
+  70, //Piri Piri
+  75, //Red Beet
+  73, //Red Potato
+  69, //Rocoto Peppe
+  74, //Sweet Potato
+  72, //White Potato
+  67, //Yellow Onion
+  79, //Zucchini
 ];
 
 const dairyList = [
-  38, // 0% Milk
-  53, // 0% Yoghurt
-  37, // Bio Fat Milk
-  41, // Bio Skim Milk
-  42, // Bio Milk
-  45, // Bio Cream
-  50, // Bio Soy Milk
-  48, // Bio Soyghurt
-  52, // Cherry Yoghurt
-  39, // Fat Milk
-  55, // Mango Yoghurt
-  44, // Oat Milk
-  43, // Oatghurt
-  56, // Pear Yoghurt
-  47, // Sour Milk
-  46, // Sour Cream
-  49, // Soyghurt
-  51, // Soy Milk
-  40, // Standard Milk
-  57, // Vanilla Yoghurt
-  54, // Yoghurt
+  38, //0% Milk
+  53, //0% Yoghurt
+  45, //Bio Cream
+  37, //Bio Fat Milk
+  42, //Bio Milk
+  41, //Bio Skim Milk
+  50, //Bio Soy Milk
+  48, //Bio Soyghurt
+  52, //Cherry Yoghurt
+  39, //Fat Milk
+  55, //Mango Yoghurt
+  44, //Oat Milk
+  43, //Oatghurt
+  56, //Pear Yoghurt
+  46, //Sour Cream
+  47, //Sour Milk
+  51, //Soy Milk
+  49, //Soyghurt
+  40, //Standard Milk
+  57, //Vanilla Yoghurt
+  54, //Yoghurt
 ];
 
 const weirdList = [];
@@ -238,7 +314,7 @@ function draw() {
 
     // Draw all targets
     for (var i = 0; i < legendas.getRowCount(); i++) {
-      if (targets[i].isDrawn) {
+      if (targets[i].isDrawn()) {
         targets[i].draw();
       }
     }
@@ -387,15 +463,13 @@ function mousePressed() {
         j = 0;
         k = 0;
         changeIdList = buttons[i].getTargets();
-        console.log(changeIdList);
         //positionList = buttons[i].getPositionList();
         while (j < legendas.getRowCount() || k > changeIdList.length) {
-          console.log(targets[j].getId());
           if (targets[j].getId() == changeIdList[k]) {
             //targets[j].alterTarget(positionList[k][0], positionList[k][1]);
             targets[j].makeDrawable();
-            console.log(targets[j].isDrawn());
             k++;
+
           }
           j++;
         }
