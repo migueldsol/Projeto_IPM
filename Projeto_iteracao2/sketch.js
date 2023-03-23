@@ -364,7 +364,7 @@ function draw() {
     textAlign(LEFT);
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
 
-    // Draw all targets
+    // Draw main menu targets
     for (var i = 0; i < 5; i++) buttons[i].draw();
 
     // Draw the target label to be selected in the current trial
@@ -492,13 +492,16 @@ function mousePressed() {
       // Check if the user clicked over one of the buttons
       if (buttons[i].clicked(mouseX, mouseY)) {
         let temp_targets = buttons[i].getTargets();
+        console.log(temp_targets);
         let temp_position = buttons[i].getPositionList();
         for (var j = 0; j < temp_targets.length; j++) {
+          console.log(targets[temp_targets[j]]);
           targets[temp_targets[j]].alterTarget(
             temp_position[j][0],
             temp_position[j][1]
           );
         }
+        console.log(targets);
         current_menu = buttons[i].getLabel();
       }
       draw_menu = false;
@@ -550,9 +553,8 @@ function continueTest() {
 function createTargets(target_size) {
   // Creates targets
   for (var i = 0; i < legendas.getRowCount(); i++) {
-    id = orderedIdByName[i];
-    let target_label = legendas.getString(id, 0);
-    let target_id = legendas.getNum(id, 1);
+    let target_label = legendas.getString(i, 0);
+    let target_id = legendas.getNum(i, 1);
 
     let target = new Target(0, 0, target_size, target_label, target_id);
     targets.push(target);
@@ -607,7 +609,7 @@ function windowResized() {
     // Below we find out out white space we can have between 2 cm targets
     screen_width = display.width * 2.54; // screen width
     screen_height = display.height * 2.54; // screen height
-    let target_size = 4; // sets the target size (will be converted to cm when passed to createTargets)
+    let target_size = 2; // sets the target size (will be converted to cm when passed to createTargets)
     let horizontal_gap = screen_width - target_size * GRID_COLUMNS; // empty space in cm across the x-axis (based on 10 targets per row)
     let vertical_gap = screen_height - target_size * GRID_ROWS; // empty space in cm across the y-axis (based on 8 targets per column)
 
