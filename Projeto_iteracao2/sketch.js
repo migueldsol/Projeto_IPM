@@ -462,6 +462,10 @@ function mousePressed() {
         if (targets[i].id === trials[current_trial]) hits++;
         else misses++;
 
+        draw_targets = false;
+        draw_menu = true;
+        resetTargets();
+
         current_trial++; // Move on to the next trial/target
         break;
       }
@@ -487,7 +491,7 @@ function mousePressed() {
     // Check if this was the first selection in an attempt
     else if (current_trial === 1) testStartTime = millis();
   }
-  if (draw_menu) {
+  else if (draw_menu) {
     for (var i = 0; i < 5; i++) {
       // Check if the user clicked over one of the buttons
       if (buttons[i].clicked(mouseX, mouseY)) {
@@ -547,6 +551,7 @@ function continueTest() {
 
   // Shows the filter again
   draw_menu = true;
+  resetTargets();
 }
 
 // Creates and positions the UI targets
@@ -558,6 +563,12 @@ function createTargets(target_size) {
 
     let target = new Target(0, 0, target_size, target_label, target_id);
     targets.push(target);
+  }
+}
+// Clears the targets from the screen
+function resetTargets(){
+  for (var i = 0; i < legendas.getRowCount(); i++){
+    targets[i].makeNotDrawable();
   }
 }
 
