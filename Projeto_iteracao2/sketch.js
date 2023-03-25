@@ -341,7 +341,7 @@ function draw() {
     textFont("Arial", 16);
     fill(color(255, 255, 255));
     textAlign(LEFT);
-    text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
+    text("Trial " + (current_trial + 1) + " of " + trials.length, width/2, 20);
 
     // Draw all targets
     for (var i = 0; i < legendas.getRowCount(); i++) {
@@ -362,7 +362,7 @@ function draw() {
     textFont("Arial", 16);
     fill(color(255, 255, 255));
     textAlign(LEFT);
-    text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
+    text("Trial " + (current_trial + 1) + " of " + trials.length, width/2, 20);
 
     // Draw main menu targets
     for (var i = 0; i < 5; i++) buttons[i].draw();
