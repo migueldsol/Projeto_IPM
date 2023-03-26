@@ -124,37 +124,49 @@ const orderedIdByName = [
 ];
 
 const fruitsList = [
-  20, //Anjou (Pear)
+  20, //Anjou
+  28, //Apple Juice
   5, //Avocado
   6, //Banana
   76, //Beef Tomato
+  68, //Bell Pepper
   11, //Cantaloupe
-  21, //Conference (Pear)
+  61, //Carrots
+  34, //Cherry Juice
+  52, //Cherry Yoghurt
+  21, //Conference
+  62, //Cucumber
   12, //Galia Melon
   0, //Golden
   1, //Granny Smith
-  22, //Kaiser (Pear)
+  22, //Kaiser
   7, //Kiwi
-  8, //Lemon
-  9, //Lime
   10, //Mango
+  31, //Mango Juice
+  55, //Mango Yoghurt
   13, //Melon
   15, //Nectarine
   16, //Orange
+  29, //Orange Juice
   17, //Papaya
   18, //Passion Fruit
   19, //Peach
+  32, //Peach Juice
+  30, //Pear Juice
+  56, //Pear Yoghurt
   23, //Pineapple
-  2, //Pink Lady (Apple)
+  2, //Pink Lady
   24, //Plum
   25, //Pomegranate
-  3, //Red Delicious (Apple)
+  3, //Red Delicious
   26, //Red Grapefruit
-  4, //Royal Gala (Apple)
+  75, //Red Beet
+  4, //Royal Gala
   27, //Satsumas
+  14, //Watermelon
   77, //Tomato
   78, //Vine Tomato
-  14, //Watermelon
+  79, //Zucchini
 ];
 
 const juicesList = [
@@ -172,20 +184,16 @@ const juicesList = [
 const vegetablesList = [
   58, //Asparagus
   59, //Aubergine
-  68, //Bell Pepper
   60, //Cabbage
   61, //Carrots
-  62, //Cucumber
   63, //Garlic
   64, //Ginger
   65, //Leek
-  71, //Mild Pepper
   66, //Mushroom
-  70, //Piri Piri
+  71, //Mild Pepper
   75, //Red Beet
-  73, //Red Potato
-  69, //Rocoto Peppe
-  74, //Sweet Potato
+  69, //Rocoto Pepper
+  77, //Tomato
   72, //White Potato
   67, //Yellow Onion
   79, //Zucchini
@@ -215,7 +223,35 @@ const dairyList = [
   54, //Yoghurt
 ];
 
-const weirdList = [];
+const weirdList = [
+  20, //Anjou
+  58, //Aspargus
+  59, //Aubergine
+  68, //Bell Pepper
+  60, //Cabbage
+  11, //Cantaloupe
+  21, //Conference
+  62, //Cucumber --
+  63, //Garlic --
+  64, //Ginger
+  0, //Gold
+  1, //Granny Smith
+  22, //Kaiser
+  65, //Leek
+  71, //Mild Pepper
+  43, //Outghurt
+  2, //Pink Lady
+  70, //Piri Piri
+  24, //Plum
+  25, //Pomegranate
+  75, //Red Beet
+  3, //Red Delicious
+  69, //Rocoto Pepper
+  4, //Royal Gala
+  27, //Satsumas
+  35, //Smoothie
+  79 //Zucchini
+]
 
 // Ensures important data is loaded before the program starts
 function preload() {
@@ -227,11 +263,11 @@ function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
   let firstPosition = {
     //top right corner
     vegetables: [
-      windowWidth - targetSize / 2 - targetSize * 4 - 40 - h_margin * 4,
+      windowWidth - targetSize / 2 - targetSize * 5 - 40 - h_margin * 4,
       targetSize / 2 + 40,
     ],
     dairy: [
-      windowWidth - targetSize / 2 - targetSize * 4 - 40 - h_margin * 4,
+      windowWidth - targetSize / 2 - targetSize * 5 - 40 - h_margin * 4,
       windowHeight - targetSize / 2 - targetSize * 4 - 40 - v_margin * 4,
     ],
     fruits: [targetSize / 2 + 40, targetSize / 2 + 40],
@@ -239,7 +275,7 @@ function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
       targetSize / 2 + 40,
       windowHeight - targetSize / 2 - targetSize * 4 - 40 - v_margin * 4,
     ],
-    weird: 0,
+    weird: [windowWidth/2 - 2*targetSize, windowHeight/2 - 2*targetSize]
   };
 
   createTargets(targetSize, horizontal_gap, vertical_gap);
@@ -496,16 +532,13 @@ function mousePressed() {
       // Check if the user clicked over one of the buttons
       if (buttons[i].clicked(mouseX, mouseY)) {
         let temp_targets = buttons[i].getTargets();
-        console.log(temp_targets);
         let temp_position = buttons[i].getPositionList();
         for (var j = 0; j < temp_targets.length; j++) {
-          console.log(targets[temp_targets[j]]);
           targets[temp_targets[j]].alterTarget(
             temp_position[j][0],
             temp_position[j][1]
           );
         }
-        console.log(targets);
         current_menu = buttons[i].getLabel();
       }
       draw_menu = false;

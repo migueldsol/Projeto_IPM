@@ -55,7 +55,7 @@ class ButtonCat {
     let row =
       Math.floor(this.ownTargets.length / 5) +
       Math.ceil(this.ownTargets.length % 5);
-    let column = 5;
+    let column = 6;
     let startX = this.firstPosition[this.label][0];
     let startY = this.firstPosition[this.label][1];
     for (var r = 0; r < row; r++) {
