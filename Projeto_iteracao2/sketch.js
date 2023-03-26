@@ -36,9 +36,14 @@ let targets = [];
 // ButtonCat list
 let buttons = [];
 
+//ButtonCat list for back
+let backButtons = [];
+
 let screen_height = 0;
 let screen_width = 0;
 let current_menu = "";
+
+const numberBackButtons = 4;
 
 const orderedIdByName = [
   38, //0% Milk
@@ -284,6 +289,11 @@ function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
   let Width = 10 * PPCM;
   let Height = 5 * PPCM;
 
+  let Width_back = 2 * PPCM;
+  let Height_back = 2 * PPCM;
+
+  let back_list = [];
+
   //creates buttons
   //Top left corner
   let fruits = new ButtonCat(
@@ -356,6 +366,51 @@ function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
   buttons.push(juices);
   buttons.push(milks);
   buttons.push(weirds);
+
+  let back_1 = new ButtonBack(
+    0,
+    0,
+    Width_back,
+    Height_back,
+    "back",
+    h_margin,
+    v_margin,
+  );
+  //Top right corner
+  let back_2 = new ButtonBack(
+    windowWidth - Width_back,
+    0,
+    Width_back,
+    Height_back,
+    "back",
+    h_margin,
+    v_margin,
+  );
+  //bottom left corner
+  let back_3 = new ButtonBack(
+    0,
+    windowHeight - Height_back,
+    Width_back,
+    Height_back,
+    "back",
+    h_margin,
+    v_margin,
+  );
+  //Bottom right corner
+  let back_4 = new ButtonBack(
+    windowWidth - Width_back,
+    windowHeight - Height_back,
+    Width_back,
+    Height_back,
+    "back",
+    h_margin,
+    v_margin,
+  );
+
+  backButtons.push(back_1);
+  backButtons.push(back_2);
+  backButtons.push(back_3);
+  backButtons.push(back_4);
 }
 
 // Runs once at the start
@@ -384,6 +439,10 @@ function draw() {
       if (targets[i].isDrawn()) {
         targets[i].draw();
       }
+    }
+
+    for (var i = 0; i < numberBackButtons; i++){
+      backButtons[i].draw();
     }
 
     // Draw the target label to be selected in the current trial
@@ -505,6 +564,11 @@ function mousePressed() {
         current_trial++; // Move on to the next trial/target
         break;
       }
+      else if (i < numberBackButtons && backButtons[i].clicked(mouseX, mouseY)){
+        draw_targets = false;
+        draw_menu = true;
+        resetTargets();
+      }
     }
 
     // Check if the user has completed all trials
@@ -533,16 +597,46 @@ function mousePressed() {
       if (buttons[i].clicked(mouseX, mouseY)) {
         let temp_targets = buttons[i].getTargets();
         let temp_position = buttons[i].getPositionList();
+
+        //variables to choose color
+        firstLetter = 0;
+        colorVar = 0;
+        redColor = [255,0 ,0];
+        blueColor = [0, 0, 255];
+
         for (var j = 0; j < temp_targets.length; j++) {
           targets[temp_targets[j]].alterTarget(
             temp_position[j][0],
             temp_position[j][1]
           );
+
+          //get the targets first letter
+          tempFirstLetter = targets[temp_targets[j]].getLabel()[0];
+          //verify if its the same
+          if ( tempFirstLetter != firstLetter){
+            firstLetter = tempFirstLetter;
+            //swap the value of the color
+            if (colorVar == 0){
+              colorVar = 1;
+              targets[temp_targets[j]].changeColor(blueColor);
+            }
+            else {
+              colorVar = 0;
+              targets[temp_targets[j]].changeColor(redColor);
+            }
+          }
+          //swap the value of the color
+          else if (colorVar == 0){
+            targets[temp_targets[j]].changeColor(redColor);
+          }
+          else{
+            targets[temp_targets[j]].changeColor(blueColor);
+          }
         }
         current_menu = buttons[i].getLabel();
+        draw_menu = false;
+        draw_targets = true;
       }
-      draw_menu = false;
-      draw_targets = true;
     }
   }
 
@@ -593,8 +687,8 @@ function createTargets(target_size) {
   for (var i = 0; i < legendas.getRowCount(); i++) {
     let target_label = legendas.getString(i, 0);
     let target_id = legendas.getNum(i, 1);
-
-    let target = new Target(0, 0, target_size, target_label, target_id);
+    let color = [155, 155, 155];
+    let target = new Target(0, 0, target_size, target_label, target_id, color);
     targets.push(target);
   }
 }
