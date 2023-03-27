@@ -24,8 +24,8 @@ let misses = 0; // number of missed selections (used to calculate accuracy)
 let database; // Firebase DB
 
 // Study control parameters
-let draw_targets = false; // used to control what to show in draw()
-let draw_menu = false; // used to control drawing the filter
+let draw_targets = false; // used to control what to show in draw() -> targets
+let draw_button = false; //used to controll what to show in draw() -> button
 let trials; // contains the order of targets that activate in the test
 let current_trial = 0; // the current trial number (indexes into trials array above)
 let attempt = 0; // users complete each test twice to account for practice (attemps 0 and 1)
@@ -34,25 +34,18 @@ let attempt = 0; // users complete each test twice to account for practice (atte
 let targets = [];
 
 // ButtonCat list
-let buttons = [];
-
-//ButtonCat list for back
-let backButtons = [];
-
-let screen_height = 0;
-let screen_width = 0;
-let current_menu = "";
-
-const numberBackButtons = 4;
+let button;
 
 const orderedIdByName = [
   38, //0% Milk
   53, //0% Yoghurt
+
   20, //Anjou
   28, //Apple Juice
   58, //Asparagus
   59, //Aubergine
   5, //Avocado
+
   6, //Banana
   76, //Beef Tomato
   68, //Bell Pepper
@@ -62,6 +55,7 @@ const orderedIdByName = [
   41, //Bio Skim Milk
   50, //Bio Soy Milk
   48, //Bio Soyghurt
+
   60, //Cabbage
   11, //Cantaloupe
   61, //Carrots
@@ -69,18 +63,23 @@ const orderedIdByName = [
   52, //Cherry Yoghurt
   21, //Conference
   62, //Cucumber
+
   39, //Fat Milk
   33, //Fresh Juice
+
   12, //Galia Melon
   63, //Garlic
   64, //Ginger
   0, //Golden
   1, //Granny Smith
+
   22, //Kaiser
   7, //Kiwi
+
   65, //Leek
   8, //Lemon
   9, //Lime
+
   36, //Mandarin Juice
   10, //Mango
   31, //Mango Juice
@@ -88,11 +87,14 @@ const orderedIdByName = [
   13, //Melon
   71, //Mild Pepper
   66, //Mushroom
+
   15, //Nectarine
+
   44, //Oat Milk
   43, //Oatghurt
   16, //Orange
   29, //Orange Juice
+
   17, //Papaya
   18, //Passion Fruit
   19, //Peach
@@ -104,12 +106,14 @@ const orderedIdByName = [
   70, //Piri Piri
   24, //Plum
   25, //Pomegranate
+
   75, //Red Beet
   3, //Red Delicious
   26, //Red Grapefruit
   73, //Red Potato
   69, //Rocoto Pepper
   4, //Royal Gala
+
   27, //Satsumas
   35, //Smoothie
   46, //Sour Cream
@@ -118,13 +122,18 @@ const orderedIdByName = [
   49, //Soyghurt
   40, //Standard Milk
   74, //Sweet Potato
+
   77, //Tomato
+
   57, //Vanilla Yoghurt
   78, //Vine Tomato
+
   14, //Watermelon
   72, //White Potato
+
   67, //Yellow Onion
   54, //Yoghurt
+
   79, //Zucchini
 ];
 
@@ -258,159 +267,24 @@ const weirdList = [
   79 //Zucchini
 ]
 
+
 // Ensures important data is loaded before the program starts
 function preload() {
   legendas = loadTable("legendas.csv", "csv", "header");
 }
 function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
-  h_margin = horizontal_gap / (GRID_COLUMNS - 1);
-  v_margin = vertical_gap / (GRID_ROWS - 1);
-  let firstPosition = {
-    //top right corner
-    vegetables: [
-      windowWidth - targetSize / 2 - targetSize * 5 - 40 - h_margin * 4,
-      targetSize / 2 + 40,
-    ],
-    dairy: [
-      windowWidth - targetSize / 2 - targetSize * 5 - 40 - h_margin * 4,
-      windowHeight - targetSize / 2 - targetSize * 4 - 40 - v_margin * 4,
-    ],
-    fruits: [targetSize / 2 + 40, targetSize / 2 + 40],
-    juices: [
-      targetSize / 2 + 40,
-      windowHeight - targetSize / 2 - targetSize * 4 - 40 - v_margin * 4,
-    ],
-    weird: [windowWidth/2 - 2*targetSize, windowHeight/2 - 2*targetSize]
-  };
-
+  let labels = ["Cat1","Cat2", "Cat3", "Cat4", "Cat5", "Cat6"];
+  let categoryColors = [
+    '#FF4136', // red
+    '#FFDC00', // yellow
+    '#2ECC40', // green
+    '#0074D9', // blue
+    '#B10DC9', // purple
+    '#FF851B', // orange
+  ];
+  button = new ButtonCat(width/2, height/2, 5 * PPCM, 0,labels, categoryColors);
   createTargets(targetSize, horizontal_gap, vertical_gap);
-  let centerX = displayWidth / 2;
-  let centerY = displayHeight / 2;
-  let Width = 10 * PPCM;
-  let Height = 5 * PPCM;
-
-  let Width_back = 2 * PPCM;
-  let Height_back = 2 * PPCM;
-
-  let back_list = [];
-
-  //creates buttons
-  //Top left corner
-  let fruits = new ButtonCat(
-    0,
-    0,
-    Width,
-    Height,
-    "fruits",
-    fruitsList,
-    h_margin,
-    v_margin,
-    firstPosition,
-    targetSize
-  );
-  //Top right corner
-  let vegetables = new ButtonCat(
-    windowWidth - Width,
-    0,
-    Width,
-    Height,
-    "vegetables",
-    vegetablesList,
-    h_margin,
-    v_margin,
-    firstPosition,
-    targetSize
-  );
-  //bottom left corner
-  let juices = new ButtonCat(
-    0,
-    windowHeight - Height,
-    Width,
-    Height,
-    "juices",
-    juicesList,
-    h_margin,
-    v_margin,
-    firstPosition,
-    targetSize
-  );
-  //Bottom right corner
-  let milks = new ButtonCat(
-    windowWidth - Width,
-    windowHeight - Height,
-    Width,
-    Height,
-    "dairy",
-    dairyList,
-    h_margin,
-    v_margin,
-    firstPosition,
-    targetSize
-  );
-  //middle
-  let weirds = new ButtonCat(
-    centerX - Width / 2,
-    centerY - Height / 2,
-    Width,
-    Height,
-    "weird",
-    weirdList,
-    h_margin,
-    v_margin,
-    firstPosition,
-    targetSize
-  );
-
-  buttons.push(fruits);
-  buttons.push(vegetables);
-  buttons.push(juices);
-  buttons.push(milks);
-  buttons.push(weirds);
-
-  let back_1 = new ButtonBack(
-    0,
-    0,
-    Width_back,
-    Height_back,
-    "back",
-    h_margin,
-    v_margin,
-  );
-  //Top right corner
-  let back_2 = new ButtonBack(
-    windowWidth - Width_back,
-    0,
-    Width_back,
-    Height_back,
-    "back",
-    h_margin,
-    v_margin,
-  );
-  //bottom left corner
-  let back_3 = new ButtonBack(
-    0,
-    windowHeight - Height_back,
-    Width_back,
-    Height_back,
-    "back",
-    h_margin,
-    v_margin,
-  );
-  //Bottom right corner
-  let back_4 = new ButtonBack(
-    windowWidth - Width_back,
-    windowHeight - Height_back,
-    Width_back,
-    Height_back,
-    "back",
-    h_margin,
-    v_margin,
-  );
-
-  backButtons.push(back_1);
-  backButtons.push(back_2);
-  backButtons.push(back_3);
-  backButtons.push(back_4);
+  draw_button = true;
 }
 
 // Runs once at the start
@@ -432,7 +306,7 @@ function draw() {
     textFont("Arial", 16);
     fill(color(255, 255, 255));
     textAlign(LEFT);
-    text("Trial " + (current_trial + 1) + " of " + trials.length, width/2, 20);
+    text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
 
     // Draw all targets
     for (var i = 0; i < legendas.getRowCount(); i++) {
@@ -441,31 +315,13 @@ function draw() {
       }
     }
 
-    for (var i = 0; i < numberBackButtons; i++){
-      backButtons[i].draw();
-    }
-
     // Draw the target label to be selected in the current trial
     textFont("Arial", 20);
     textAlign(CENTER);
     text(legendas.getString(trials[current_trial], 0), width / 2, height - 20);
-  } else if (draw_menu) {
-    // The user is interacting with the 6x3 target grid
-    background(color(0, 0, 0)); // sets background to black
-
-    // Print trial count at the top left-corner of the canvas
-    textFont("Arial", 16);
-    fill(color(255, 255, 255));
-    textAlign(LEFT);
-    text("Trial " + (current_trial + 1) + " of " + trials.length, width/2, 20);
-
-    // Draw main menu targets
-    for (var i = 0; i < 5; i++) buttons[i].draw();
-
-    // Draw the target label to be selected in the current trial
-    textFont("Arial", 20);
-    textAlign(CENTER);
-    text(legendas.getString(trials[current_trial], 0), width / 2, height - 20);
+  } 
+  else if (draw_button){
+    button.draw();
   }
 }
 
@@ -558,16 +414,8 @@ function mousePressed() {
         else misses++;
 
         draw_targets = false;
-        draw_menu = true;
-        resetTargets();
-
         current_trial++; // Move on to the next trial/target
         break;
-      }
-      else if (i < numberBackButtons && backButtons[i].clicked(mouseX, mouseY)){
-        draw_targets = false;
-        draw_menu = true;
-        resetTargets();
       }
     }
 
@@ -591,77 +439,6 @@ function mousePressed() {
     // Check if this was the first selection in an attempt
     else if (current_trial === 1) testStartTime = millis();
   }
-  else if (draw_menu) {
-    for (var i = 0; i < 5; i++) {
-      // Check if the user clicked over one of the buttons
-      if (buttons[i].clicked(mouseX, mouseY)) {
-        let temp_targets = buttons[i].getTargets();
-        let temp_position = buttons[i].getPositionList();
-
-        //variables to choose color
-        firstLetter = 0;
-        colorVar = 0;
-        redColor = [255,0 ,0];
-        blueColor = [0, 0, 255];
-
-        for (var j = 0; j < temp_targets.length; j++) {
-          targets[temp_targets[j]].alterTarget(
-            temp_position[j][0],
-            temp_position[j][1]
-          );
-
-          //get the targets first letter
-          tempFirstLetter = targets[temp_targets[j]].getLabel()[0];
-          //verify if its the same
-          if ( tempFirstLetter != firstLetter){
-            firstLetter = tempFirstLetter;
-            //swap the value of the color
-            if (colorVar == 0){
-              colorVar = 1;
-              targets[temp_targets[j]].changeColor(blueColor);
-            }
-            else {
-              colorVar = 0;
-              targets[temp_targets[j]].changeColor(redColor);
-            }
-          }
-          //swap the value of the color
-          else if (colorVar == 0){
-            targets[temp_targets[j]].changeColor(redColor);
-          }
-          else{
-            targets[temp_targets[j]].changeColor(blueColor);
-          }
-        }
-        current_menu = buttons[i].getLabel();
-        draw_menu = false;
-        draw_targets = true;
-      }
-    }
-  }
-
-  // if (draw_menu) {
-  //   for (var i = 0; i < 5; i++) {
-  //     // Check if the user clicked over one of the buttons
-  //     if (buttons[i].clicked(mouseX, mouseY)) {
-  //       j = 0;
-  //       k = 0;
-  //       changeIdList = buttons[i].getTargets();
-  //       //positionList = buttons[i].getPositionList();
-  //       while (j < legendas.getRowCount() || k > changeIdList.length) {
-  //         if (targets[j].getId() == changeIdList[k]) {
-  //           //targets[j].alterTarget(positionList[k][0], positionList[k][1]);
-  //           targets[j].makeDrawable();
-  //           k++;
-  //         }
-  //         j++;
-  //       }
-  //     }
-  // }
-  //   draw_menu = false;
-  //   draw_targets = true;
-  // }
-  //TODO add verify of button
 }
 
 // Evoked after the user starts its second (and last) attempt
@@ -675,10 +452,6 @@ function continueTest() {
 
   current_trial = 0;
   continue_button.remove();
-
-  // Shows the filter again
-  draw_menu = true;
-  resetTargets();
 }
 
 // Creates and positions the UI targets
@@ -699,40 +472,7 @@ function resetTargets(){
   }
 }
 
-// Creates and positions the UI targets
-// function createTargets(target_size, horizontal_gap, vertical_gap) {
-//   // Define the margins between targets by dividing the white space
-//   // for the number of targets minus one
-//   h_margin = horizontal_gap / (GRID_COLUMNS - 1);
-//   v_margin = vertical_gap / (GRID_ROWS - 1);
 
-//   // Set targets in a 8 x 10 grid
-//   i = 0;
-//   for (var r = 0; r < GRID_ROWS; r++) {
-//     for (var c = 0; c < GRID_COLUMNS; c++) {
-//       let target_x = 40 + (h_margin + target_size) * c + target_size / 2; // give it some margin from the left border
-//       let target_y = (v_margin + target_size) * r + target_size / 2;
-
-//       // Find the appropriate label and ID for this target
-//       let legendas_index = orderedIdByName[i];
-//       let target_label = legendas.getString(legendas_index, 0);
-//       let target_id = legendas.getNum(legendas_index, 1);
-
-//       let target = new Target(
-//         target_x,
-//         target_y + 40,
-//         target_size,
-//         target_label,
-//         target_id
-//       );
-//       targets.push(target);
-//       console.log(target);
-//       i++;
-//     }
-//   }
-// }
-
-//function givePostion(button)
 
 // Is invoked when the canvas is resized (e.g., when we go fullscreen)
 function windowResized() {
@@ -751,7 +491,6 @@ function windowResized() {
     let horizontal_gap = screen_width - target_size * GRID_COLUMNS; // empty space in cm across the x-axis (based on 10 targets per row)
     let vertical_gap = screen_height - target_size * GRID_ROWS; // empty space in cm across the y-axis (based on 8 targets per column)
 
-    draw_menu = true;
     buttonSetup(
       horizontal_gap * PPCM - 80,
       vertical_gap * PPCM - 80,

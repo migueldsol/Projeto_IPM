@@ -256,5 +256,6 @@ function windowResized() {
 
     // Starts drawing targets immediately after we go fullscreen
     draw_targets = true;
+    background(0,0,0);
   }
 }

@@ -1,82 +1,60 @@
 // ButtonCAT class (position and width)
 class ButtonCat {
-  constructor(
-    x,
-    y,
-    w,
-    h,
-    l,
-    ownTargets, //[[id, x, y]
-    horizontalGap,
-    verticalGap,
-    firstPosition,
-    targetSize
-  ) {
+  constructor(x, y, bigRadius, smallRadius, labels, colors){
     this.x = x;
     this.y = y;
-    this.width = w;
-    this.height = h;
-    this.label = l;
-    this.ownTargets = ownTargets; //[[id, x, y]]
-    this.horizontalGap = horizontalGap;
-    this.verticalGap = verticalGap;
-    this.firstPosition = firstPosition;
-    this.positionList = [];
-    this.targetSize = targetSize;
-    this.positions();
+    this.bigRadius = bigRadius;
+    this.smallRadius = smallRadius;
+    this.labels = labels;
+    this.colors = colors;
+    this.angleStep = TWO_PI / labels.length;
   }
+
 
   // Checks if a mouse click took place
   // within the target
   clicked(mouse_x, mouse_y) {
-    return (
-      mouse_x > this.x &&
-      mouse_x < this.x + this.width &&
-      mouse_y > this.y &&
-      mouse_y < this.y + this.height
-    );
+    let d = dist(mouse_x, mouse_y, this.x, this.y);
+    if (d < this.bigRadius && d > this.smallRadius) {
+      let angle = atan2(mouse_y - this.y, mouse_x - this.x);
+      if (angle < 0) {
+        angle += TWO_PI;
+      }
+      return floor(angle / angleStep);
+    }
+    else return 0;
   }
 
   // Draws the target (i.e., a circle)
   // and its label
   draw() {
-    // Draw target
-    fill(color(155, 155, 155));
-    rect(this.x, this.y, this.width, this.height);
-
-    // Draw label
-    textFont("Arial", 40);
-    textAlign(CENTER, CENTER);
-    fill(color(255, 255, 255));
-    text(this.label, this.x + this.width / 2, this.y + this.height / 2);
-  }
-
-  positions() {
-    let row =
-      Math.floor(this.ownTargets.length / 5) +
-      Math.ceil(this.ownTargets.length % 5);
-    let column = 6;
-    let startX = this.firstPosition[this.label][0];
-    let startY = this.firstPosition[this.label][1];
-    for (var r = 0; r < row; r++) {
-      for (var c = 0; c < column; c++) {
-        if (c + column * r == this.ownTargets.length) {
-          break;
-        }
-        let target_x = startX + (this.horizontalGap + this.targetSize) * c;
-        let target_y = startY + (this.verticalGap + this.targetSize) * r;
-        this.positionList.push([target_x, target_y]);
-      }
+    // for (let i = 0; i < this.labels.length; i++) {
+    //   push();
+    //   translate(width / 2, height / 2);
+    //   rotate(i * this.angleStep);
+    //   fill(this.colors[i]);
+    //   arc(0, 0, this.bigRadius * 2, this.bigRadius * 2, 0, this.angleStep, PIE);
+    //   //fill(255);
+    //   rotate(0);
+    //   textAlign(CENTER, CENTER);
+    //   textSize(20);
+    //   text(this.labels[i], this.bigRadius * 1.5, 0);
+    //   pop();
+    // }
+    for (let i = 0; i < this.colors.length; i++) {
+      let start = this.angleStep * i;
+      let stop = start + this.angleStep;
+      let labelAngle = (start + stop) / 2;
+      let labelX = this.x + (this.bigRadius + 20) * cos(labelAngle);
+      let labelY = this.y + (this.bigRadius + 20) * sin(labelAngle);
+      fill(this.colors[i]);
+      arc(this.x, this.y, this.bigRadius * 2, this.bigRadius * 2, start, stop, PIE);
+      textAlign(CENTER, CENTER);
+      push();
+      translate(labelX, labelY);
+      rotate(labelAngle + HALF_PI);
+      text("Category " + i, 0, 0);
+      pop();
     }
-  }
-
-  getTargets() {
-    return this.ownTargets;
-  }
-  getPositionList() {
-    return this.positionList;
-  }
-  getLabel() {
-    return this.label;
   }
 }
