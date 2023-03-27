@@ -12,8 +12,8 @@ const RECORD_TO_FIREBASE = false; // Set to 'true' to record user results to Fir
 // Pixel density and setup variables (DO NOT CHANGE!)
 let PPI, PPCM;
 const NUM_OF_TRIALS = 12; // The numbers of trials (i.e., target selections) to be completed
-const GRID_ROWS = 8; // We divide our 80 targets in a 8x10 grid
-const GRID_COLUMNS = 10; // We divide our 80 targets in a 8x10 grid
+const GRID_ROWS = 5; // We divide our 80 targets in a 8x10 grid
+const GRID_COLUMNS = 6; // We divide our 80 targets in a 8x10 grid
 let continue_button;
 let legendas; // The item list from the "legendas" CSV
 
@@ -35,6 +35,8 @@ let targets = [];
 
 // ButtonCat list
 let button;
+
+let backButtons = [];
 
 const orderedIdByName = [
   38, //0% Milk
@@ -137,31 +139,71 @@ const orderedIdByName = [
   79, //Zucchini
 ];
 
-const fruitsList = [
+const cat5List = [
+  38, //0% Milk
+  53, //0% Yoghurt
+
   20, //Anjou
   28, //Apple Juice
+  58, //Asparagus
+  59, //Aubergine
   5, //Avocado
+
   6, //Banana
   76, //Beef Tomato
   68, //Bell Pepper
+  45, //Bio Cream
+  37, //Bio Fat Milk
+  42, //Bio Milk
+  41, //Bio Skim Milk
+  50, //Bio Soy Milk
+  48 //Bio Soyghurt
+]
+
+const cat6List = [
+  60, //Cabbage
   11, //Cantaloupe
   61, //Carrots
   34, //Cherry Juice
   52, //Cherry Yoghurt
   21, //Conference
   62, //Cucumber
+  
+  39, //Fat Milk
+  33, //Fresh Juice
+
   12, //Galia Melon
+  63, //Garlic
+  64, //Ginger
   0, //Golden
   1, //Granny Smith
+
   22, //Kaiser
-  7, //Kiwi
+  7 //Kiwi
+]
+
+const cat1List =[
+  65, //Leek
+  8, //Lemon
+  9, //Lime
+
+  36, //Mandarin Juice
   10, //Mango
   31, //Mango Juice
   55, //Mango Yoghurt
   13, //Melon
+  71, //Mild Pepper
+  66, //Mushroom
+
   15, //Nectarine
+
+  44, //Oat Milk
+  43, //Oatghurt
   16, //Orange
-  29, //Orange Juice
+  29 //Orange Juice
+]
+
+const cat2List =[
   17, //Papaya
   18, //Passion Fruit
   19, //Peach
@@ -170,110 +212,53 @@ const fruitsList = [
   56, //Pear Yoghurt
   23, //Pineapple
   2, //Pink Lady
+  70, //Piri Piri
   24, //Plum
   25, //Pomegranate
+
+  75, //Red Beet
   3, //Red Delicious
   26, //Red Grapefruit
-  75, //Red Beet
-  4, //Royal Gala
-  27, //Satsumas
-  14, //Watermelon
-  77, //Tomato
-  78, //Vine Tomato
-  79, //Zucchini
-];
-
-const juicesList = [
-  28, // Apple Juice
-  34, // Cherry Juice
-  33, // Fresh Juice
-  31, // Mango Juice
-  36, // Mandarin Juice
-  29, // Orange Juice
-  32, // Peach Juice
-  30, // Pear Juice
-  35, // Smoothie
-];
-
-const vegetablesList = [
-  58, //Asparagus
-  59, //Aubergine
-  60, //Cabbage
-  61, //Carrots
-  63, //Garlic
-  64, //Ginger
-  65, //Leek
-  66, //Mushroom
-  71, //Mild Pepper
-  75, //Red Beet
+  73, //Red Potato
   69, //Rocoto Pepper
-  77, //Tomato
-  72, //White Potato
-  67, //Yellow Onion
-  79, //Zucchini
-];
+  4 //Royal Gala
+]
 
-const dairyList = [
-  38, //0% Milk
-  53, //0% Yoghurt
-  45, //Bio Cream
-  37, //Bio Fat Milk
-  42, //Bio Milk
-  41, //Bio Skim Milk
-  50, //Bio Soy Milk
-  48, //Bio Soyghurt
-  52, //Cherry Yoghurt
-  39, //Fat Milk
-  55, //Mango Yoghurt
-  44, //Oat Milk
-  43, //Oatghurt
-  56, //Pear Yoghurt
+const cat3List = [
+  27, //Satsumas
+  35, //Smoothie
   46, //Sour Cream
   47, //Sour Milk
   51, //Soy Milk
   49, //Soyghurt
   40, //Standard Milk
-  57, //Vanilla Yoghurt
-  54, //Yoghurt
-];
+  74, //Sweet Potato
 
-const weirdList = [
-  20, //Anjou
-  58, //Aspargus
-  59, //Aubergine
-  68, //Bell Pepper
-  60, //Cabbage
-  11, //Cantaloupe
-  21, //Conference
-  62, //Cucumber --
-  63, //Garlic --
-  64, //Ginger
-  0, //Gold
-  1, //Granny Smith
-  22, //Kaiser
-  65, //Leek
-  71, //Mild Pepper
-  43, //Outghurt
-  2, //Pink Lady
-  70, //Piri Piri
-  24, //Plum
-  25, //Pomegranate
-  75, //Red Beet
-  3, //Red Delicious
-  69, //Rocoto Pepper
-  4, //Royal Gala
-  27, //Satsumas
-  35, //Smoothie
-  79 //Zucchini
+  77, //Tomato
+
+  57, //Vanilla Yoghurt
+  78, //Vine Tomato
 ]
 
+const cat4List = [
+  57, //Vanilla Yoghurt
+  78, //Vine Tomato
+
+  14, //Watermelon
+  72, //White Potato
+
+  67, //Yellow Onion
+  54, //Yoghurt
+
+  79, //Zucchini
+]
 
 // Ensures important data is loaded before the program starts
 function preload() {
   legendas = loadTable("legendas.csv", "csv", "header");
 }
 function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
-  let labels = ["Cat1","Cat2", "Cat3", "Cat4", "Cat5", "Cat6"];
+  let labels = ["L, M, N, O", "P, R", "S, T, V", "W, Y, Z", "0, A, B","C, F, G, K"];
   let categoryColors = [
     '#FF4136', // red
     '#FFDC00', // yellow
@@ -282,8 +267,20 @@ function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
     '#B10DC9', // purple
     '#FF851B', // orange
   ];
-  button = new ButtonCat(width/2, height/2, 5 * PPCM, 0,labels, categoryColors);
-  createTargets(targetSize, horizontal_gap, vertical_gap);
+  button = new ButtonCat(width/2, height/2, 6 * PPCM, 3 * PPCM,labels, categoryColors, [cat1List, cat2List, cat3List, cat4List, cat5List, cat6List]);
+  createTargets(targetSize);
+  let tempTargets = button.getTargets();
+  for (let i = 0; i < tempTargets.length; i++) {
+    giveTargetsPosition(targetSize,horizontal_gap,vertical_gap,tempTargets[i]);
+  }
+
+  backSize = 2 * PPCM;
+  let posList = [[0,0], [width - backSize, 0], [width - backSize, height - backSize], [0, height - backSize]];
+  for (var i = 0; i < 4; i++){
+    let newBack = new ButtonBack(posList[i][0], posList[i][1], backSize, backSize);
+    backButtons.push(newBack);
+  }
+
   draw_button = true;
 }
 
@@ -315,13 +312,33 @@ function draw() {
       }
     }
 
+    for (var i = 0; i < backButtons.length; i++){
+      backButtons[i].draw();
+    }
+
     // Draw the target label to be selected in the current trial
     textFont("Arial", 20);
     textAlign(CENTER);
     text(legendas.getString(trials[current_trial], 0), width / 2, height - 20);
   } 
   else if (draw_button){
+
+    // The user is interacting with the 6x3 target grid
+    background(color(0, 0, 0)); // sets background to black
+
+    // Print trial count at the top left-corner of the canvas
+    textFont("Arial", 16);
+    fill(color(255, 255, 255));
+    textAlign(LEFT);
+    text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
+
     button.draw();
+    
+    // Draw the target label to be selected in the current trial
+    textFont("Arial", 20);
+    fill(color(255, 255, 255));
+    textAlign(CENTER);
+    text(legendas.getString(trials[current_trial], 0), width / 2, height - 20);
   }
 }
 
@@ -406,6 +423,7 @@ function mousePressed() {
   // Only look for mouse releases during the actual test
   // (i.e., during target selections)
   if (draw_targets) {
+
     for (var i = 0; i < legendas.getRowCount(); i++) {
       // Check if the user clicked over one of the targets
       if (targets[i].isDrawn() && targets[i].clicked(mouseX, mouseY)) {
@@ -416,6 +434,13 @@ function mousePressed() {
         draw_targets = false;
         current_trial++; // Move on to the next trial/target
         break;
+      }
+      else if( i < backButtons.length && backButtons[i].clicked(mouseX, mouseY)){
+        draw_targets = false;
+
+        resetTargets();
+
+        draw_button = true;
       }
     }
 
@@ -438,6 +463,19 @@ function mousePressed() {
     }
     // Check if this was the first selection in an attempt
     else if (current_trial === 1) testStartTime = millis();
+  }
+  else if (draw_button){
+    varButton = button.clicked(mouseX, mouseY);
+
+    if (varButton >= 0){
+      wantedTargets = button.getTargets()[varButton];
+      for (var i = 0; i < wantedTargets.length; i++){
+        console.log(i, wantedTargets,targets[38]);
+        targets[wantedTargets[i]].makeDrawable();
+      }
+      draw_menu = false;
+      draw_targets = true;
+    }
   }
 }
 
@@ -465,6 +503,47 @@ function createTargets(target_size) {
     targets.push(target);
   }
 }
+
+function giveTargetsPosition(target_size, horizontal_gap, vertical_gap, targetsIds) {
+  // Define the margins between targets by dividing the white space
+  // for the number of targets minus one
+  let counter = 0;
+  let endLoop = false;
+  h_margin = horizontal_gap / (GRID_COLUMNS - 1);
+  v_margin = vertical_gap / (GRID_ROWS - 1);
+  // Set targets in a 8 x 10 grid
+  for (var r = 0; r < GRID_ROWS; r++) {
+    for (var c = 0; c < GRID_COLUMNS; c++) {
+      let target_x = 40 + (h_margin + target_size) * c + target_size / 2; // give it some margin from the left border
+      let target_y = (v_margin + target_size) * r + target_size / 2;
+      //check to see if current counter is greater than targetList length
+      if(counter == targetsIds.length - 1){
+        targets[targetsIds[counter]].alterPosition(target_x, target_y);
+        endLoop = true;
+        break;
+      }
+      actualTarget = targets[targetsIds[counter]].getLabel();
+      nextTarget = targets[targetsIds[counter]].getLabel();
+      if( actualTarget[0] !== nextTarget[0]){
+        counter++;
+        targets[targetsIds[counter]].alterPosition(target_x, target_y);
+        break;
+      }
+      counter++;
+      targets[targetsIds[counter]].alterPosition(target_x, target_y);
+    }
+    if(endLoop){
+      break;
+    }
+  }
+}
+  
+
+
+
+
+
+
 // Clears the targets from the screen
 function resetTargets(){
   for (var i = 0; i < legendas.getRowCount(); i++){

@@ -39,10 +39,9 @@ class Target {
     return this.id;
   }
 
-  alterTarget(x, y) {
+  alterPosition(x, y) {
     this.x = x;
     this.y = y;
-    this.drawable = true;
   }
   makeDrawable() {
     this.drawable = true;

@@ -1,12 +1,13 @@
 // ButtonCAT class (position and width)
 class ButtonCat {
-  constructor(x, y, bigRadius, smallRadius, labels, colors){
+  constructor(x, y, bigRadius, smallRadius, labels, colors, targetsId){
     this.x = x;
     this.y = y;
     this.bigRadius = bigRadius;
     this.smallRadius = smallRadius;
     this.labels = labels;
     this.colors = colors;
+    this.targetsId = targetsId;
     this.angleStep = TWO_PI / labels.length;
   }
 
@@ -20,27 +21,14 @@ class ButtonCat {
       if (angle < 0) {
         angle += TWO_PI;
       }
-      return floor(angle / angleStep);
+      return floor(angle / this.angleStep);
     }
-    else return 0;
+    else return -1;
   }
 
   // Draws the target (i.e., a circle)
   // and its label
   draw() {
-    // for (let i = 0; i < this.labels.length; i++) {
-    //   push();
-    //   translate(width / 2, height / 2);
-    //   rotate(i * this.angleStep);
-    //   fill(this.colors[i]);
-    //   arc(0, 0, this.bigRadius * 2, this.bigRadius * 2, 0, this.angleStep, PIE);
-    //   //fill(255);
-    //   rotate(0);
-    //   textAlign(CENTER, CENTER);
-    //   textSize(20);
-    //   text(this.labels[i], this.bigRadius * 1.5, 0);
-    //   pop();
-    // }
     for (let i = 0; i < this.colors.length; i++) {
       let start = this.angleStep * i;
       let stop = start + this.angleStep;
@@ -49,12 +37,25 @@ class ButtonCat {
       let labelY = this.y + (this.bigRadius + 20) * sin(labelAngle);
       fill(this.colors[i]);
       arc(this.x, this.y, this.bigRadius * 2, this.bigRadius * 2, start, stop, PIE);
+
+      fill(this.colors[i]);
       textAlign(CENTER, CENTER);
       push();
       translate(labelX, labelY);
       rotate(labelAngle + HALF_PI);
-      text("Category " + i, 0, 0);
+      text(this.labels[i], 0, 0);
       pop();
     }
+    fill(0);
+    ellipse(this.x, this.y, this.smallRadius);  
+  }
+
+
+  getTargets(index){
+    return this.targetsId[index];
+  }
+
+  getTargets(){
+    return this.targetsId;
   }
 }

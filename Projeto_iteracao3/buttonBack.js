@@ -4,28 +4,23 @@ class ButtonBack {
       x,
       y,
       w,
-      h,
-      l,
-      horizontalGap,
-      verticalGap
+      h
     ) {
       this.x = x;
       this.y = y;
       this.width = w;
       this.height = h;
-      this.label = l;
-      this.horizontalGap = horizontalGap;
-      this.verticalGap = verticalGap;
+      this.label = "Back";
     }
   
     // Checks if a mouse click took place
     // within the target
     clicked(mouse_x, mouse_y) {
       return (
-        mouse_x > this.x &&
-        mouse_x < this.x + this.width &&
-        mouse_y > this.y &&
-        mouse_y < this.y + this.height
+        mouse_x >= this.x &&
+        mouse_x <= this.x + this.width &&
+        mouse_y >= this.y &&
+        mouse_y <= this.y + this.height
       );
     }
   

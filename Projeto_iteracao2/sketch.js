@@ -459,7 +459,7 @@ function draw() {
     textAlign(LEFT);
     text("Trial " + (current_trial + 1) + " of " + trials.length, width/2, 20);
 
-    // Draw main menu targets
+    // Draw main menu button
     for (var i = 0; i < 5; i++) buttons[i].draw();
 
     // Draw the target label to be selected in the current trial
