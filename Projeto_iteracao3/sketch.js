@@ -157,8 +157,8 @@ const cat5List = [
   42, //Bio Milk
   41, //Bio Skim Milk
   50, //Bio Soy Milk
-  48 //Bio Soyghurt
-]
+  48, //Bio Soyghurt
+];
 
 const cat6List = [
   60, //Cabbage
@@ -168,7 +168,7 @@ const cat6List = [
   52, //Cherry Yoghurt
   21, //Conference
   62, //Cucumber
-  
+
   39, //Fat Milk
   33, //Fresh Juice
 
@@ -179,10 +179,10 @@ const cat6List = [
   1, //Granny Smith
 
   22, //Kaiser
-  7 //Kiwi
-]
+  7, //Kiwi
+];
 
-const cat1List =[
+const cat1List = [
   65, //Leek
   8, //Lemon
   9, //Lime
@@ -200,10 +200,10 @@ const cat1List =[
   44, //Oat Milk
   43, //Oatghurt
   16, //Orange
-  29 //Orange Juice
-]
+  29, //Orange Juice
+];
 
-const cat2List =[
+const cat2List = [
   17, //Papaya
   18, //Passion Fruit
   19, //Peach
@@ -221,8 +221,8 @@ const cat2List =[
   26, //Red Grapefruit
   73, //Red Potato
   69, //Rocoto Pepper
-  4 //Royal Gala
-]
+  4, //Royal Gala
+];
 
 const cat3List = [
   27, //Satsumas
@@ -238,7 +238,7 @@ const cat3List = [
 
   57, //Vanilla Yoghurt
   78, //Vine Tomato
-]
+];
 
 const cat4List = [
   57, //Vanilla Yoghurt
@@ -251,33 +251,66 @@ const cat4List = [
   54, //Yoghurt
 
   79, //Zucchini
-]
+];
 
 // Ensures important data is loaded before the program starts
 function preload() {
   legendas = loadTable("legendas.csv", "csv", "header");
 }
 function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
-  let labels = ["L, M, N, O", "P, R", "S, T, V", "W, Y, Z", "0, A, B","C, F, G, K"];
-  let categoryColors = [
-    '#FF4136', // red
-    '#FFDC00', // yellow
-    '#2ECC40', // green
-    '#0074D9', // blue
-    '#B10DC9', // purple
-    '#FF851B', // orange
+  let labels = [
+    "L, M, N, O",
+    "P, R",
+    "S, T, V",
+    "W, Y, Z",
+    "0, A, B",
+    "C, F, G, K",
   ];
-  button = new ButtonCat(width/2, height/2, 6 * PPCM, 3 * PPCM,labels, categoryColors, [cat1List, cat2List, cat3List, cat4List, cat5List, cat6List]);
+  let categoryColors = [
+    "#D32F2F", // (Crimson Red)
+    "#388E3C", // (Forest Green)
+    "#1A237E", // (Dark Blue)
+    "#FF9800", // (Orange)
+    "#2196F3", // (Sky Blue)
+    "#9C27B0", // (Purple)
+  ];
+  button = new ButtonCat(
+    width / 2,
+    height / 2,
+    6 * PPCM,
+    3 * PPCM,
+    labels,
+    categoryColors,
+    [cat1List, cat2List, cat3List, cat4List, cat5List, cat6List]
+  );
   createTargets(targetSize);
   let tempTargets = button.getTargets();
+  let tempColors = button.getColors();
+  console.log(tempColors);
   for (let i = 0; i < tempTargets.length; i++) {
-    giveTargetsPosition(targetSize,horizontal_gap,vertical_gap,tempTargets[i]);
+    giveTargetsPosition(
+      targetSize,
+      horizontal_gap,
+      vertical_gap,
+      tempTargets[i],
+      tempColors
+    );
   }
 
   backSize = 2 * PPCM;
-  let posList = [[0,0], [width - backSize, 0], [width - backSize, height - backSize], [0, height - backSize]];
-  for (var i = 0; i < 4; i++){
-    let newBack = new ButtonBack(posList[i][0], posList[i][1], backSize, backSize);
+  let posList = [
+    [0, 0],
+    [width - backSize, 0],
+    [width - backSize, height - backSize],
+    [0, height - backSize],
+  ];
+  for (var i = 0; i < 4; i++) {
+    let newBack = new ButtonBack(
+      posList[i][0],
+      posList[i][1],
+      backSize,
+      backSize
+    );
     backButtons.push(newBack);
   }
 
@@ -312,7 +345,7 @@ function draw() {
       }
     }
 
-    for (var i = 0; i < backButtons.length; i++){
+    for (var i = 0; i < backButtons.length; i++) {
       backButtons[i].draw();
     }
 
@@ -320,9 +353,7 @@ function draw() {
     textFont("Arial", 20);
     textAlign(CENTER);
     text(legendas.getString(trials[current_trial], 0), width / 2, height - 20);
-  } 
-  else if (draw_button){
-
+  } else if (draw_button) {
     // The user is interacting with the 6x3 target grid
     background(color(0, 0, 0)); // sets background to black
 
@@ -333,7 +364,7 @@ function draw() {
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
 
     button.draw();
-    
+
     // Draw the target label to be selected in the current trial
     textFont("Arial", 20);
     fill(color(255, 255, 255));
@@ -423,7 +454,6 @@ function mousePressed() {
   // Only look for mouse releases during the actual test
   // (i.e., during target selections)
   if (draw_targets) {
-
     for (var i = 0; i < legendas.getRowCount(); i++) {
       // Check if the user clicked over one of the targets
       if (targets[i].isDrawn() && targets[i].clicked(mouseX, mouseY)) {
@@ -432,10 +462,16 @@ function mousePressed() {
         else misses++;
 
         draw_targets = false;
+
+        resetTargets();
+
+        draw_button = true;
         current_trial++; // Move on to the next trial/target
         break;
-      }
-      else if( i < backButtons.length && backButtons[i].clicked(mouseX, mouseY)){
+      } else if (
+        i < backButtons.length &&
+        backButtons[i].clicked(mouseX, mouseY)
+      ) {
         draw_targets = false;
 
         resetTargets();
@@ -463,14 +499,12 @@ function mousePressed() {
     }
     // Check if this was the first selection in an attempt
     else if (current_trial === 1) testStartTime = millis();
-  }
-  else if (draw_button){
+  } else if (draw_button) {
     varButton = button.clicked(mouseX, mouseY);
 
-    if (varButton >= 0){
+    if (varButton >= 0) {
       wantedTargets = button.getTargets()[varButton];
-      for (var i = 0; i < wantedTargets.length; i++){
-        console.log(i, wantedTargets,targets[38]);
+      for (var i = 0; i < wantedTargets.length; i++) {
         targets[wantedTargets[i]].makeDrawable();
       }
       draw_menu = false;
@@ -504,54 +538,59 @@ function createTargets(target_size) {
   }
 }
 
-function giveTargetsPosition(target_size, horizontal_gap, vertical_gap, targetsIds) {
+function giveTargetsPosition(
+  target_size,
+  horizontal_gap,
+  vertical_gap,
+  targetsIds,
+  colors
+) {
   // Define the margins between targets by dividing the white space
   // for the number of targets minus one
   let counter = 0;
   let endLoop = false;
+  let space = 0;
+  let i = 0;
   h_margin = horizontal_gap / (GRID_COLUMNS - 1);
   v_margin = vertical_gap / (GRID_ROWS - 1);
   // Set targets in a 8 x 10 grid
   for (var r = 0; r < GRID_ROWS; r++) {
     for (var c = 0; c < GRID_COLUMNS; c++) {
-      let target_x = 40 + (h_margin + target_size) * c + target_size / 2; // give it some margin from the left border
-      let target_y = (v_margin + target_size) * r + target_size / 2;
-      //check to see if current counter is greater than targetList length
-      if(counter == targetsIds.length - 1){
+      let target_x = 260 + (h_margin - 60 + target_size) * c + target_size / 2; // give it some margin from the left border
+      let target_y = 110 + (v_margin - 10 + target_size) * r + target_size / 2;
+      //check to see if current counter is greater than targetList length and if so breaks the loop
+      if (counter == targetsIds.length - 1) {
+        targets[targetsIds[counter]].changeColor(colors[i]);
         targets[targetsIds[counter]].alterPosition(target_x, target_y);
         endLoop = true;
         break;
       }
       actualTarget = targets[targetsIds[counter]].getLabel();
-      nextTarget = targets[targetsIds[counter]].getLabel();
-      if( actualTarget[0] !== nextTarget[0]){
-        counter++;
+      nextTarget = targets[targetsIds[counter + 1]].getLabel();
+      //checks if the next target has a different first letter if so changes color and gives it more space
+      if (actualTarget[0] !== nextTarget[0]) {
+        targets[targetsIds[counter]].changeColor(colors[i]);
         targets[targetsIds[counter]].alterPosition(target_x, target_y);
+        counter++;
+        i++;
         break;
       }
-      counter++;
+      targets[targetsIds[counter]].changeColor(colors[i]);
       targets[targetsIds[counter]].alterPosition(target_x, target_y);
+      counter++;
     }
-    if(endLoop){
+    if (endLoop) {
       break;
     }
   }
 }
-  
-
-
-
-
-
 
 // Clears the targets from the screen
-function resetTargets(){
-  for (var i = 0; i < legendas.getRowCount(); i++){
+function resetTargets() {
+  for (var i = 0; i < legendas.getRowCount(); i++) {
     targets[i].makeNotDrawable();
   }
 }
-
-
 
 // Is invoked when the canvas is resized (e.g., when we go fullscreen)
 function windowResized() {
@@ -566,12 +605,12 @@ function windowResized() {
     // Below we find out out white space we can have between 2 cm targets
     screen_width = display.width * 2.54; // screen width
     screen_height = display.height * 2.54; // screen height
-    let target_size = 2; // sets the target size (will be converted to cm when passed to createTargets)
+    let target_size = 2.5; // sets the target size (will be converted to cm when passed to createTargets)
     let horizontal_gap = screen_width - target_size * GRID_COLUMNS; // empty space in cm across the x-axis (based on 10 targets per row)
     let vertical_gap = screen_height - target_size * GRID_ROWS; // empty space in cm across the y-axis (based on 8 targets per column)
 
     buttonSetup(
-      horizontal_gap * PPCM - 80,
+      horizontal_gap * PPCM - 260,
       vertical_gap * PPCM - 80,
       target_size * PPCM
     );

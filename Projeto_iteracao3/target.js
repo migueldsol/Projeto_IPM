@@ -20,7 +20,7 @@ class Target {
   // and its label
   draw() {
     // Draw target
-    fill(color(this.color[0], this.color[1], this.color[2]));
+    fill(color(this.color));
     circle(this.x, this.y, this.width);
 
     // Draw label
@@ -51,11 +51,11 @@ class Target {
     this.drawable = false;
   }
 
-  changeColor(color){
+  changeColor(color) {
     this.color = color;
   }
 
-  getLabel(){
+  getLabel() {
     return this.label;
   }
 }

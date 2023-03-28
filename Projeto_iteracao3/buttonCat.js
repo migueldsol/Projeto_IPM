@@ -1,6 +1,6 @@
 // ButtonCAT class (position and width)
 class ButtonCat {
-  constructor(x, y, bigRadius, smallRadius, labels, colors, targetsId){
+  constructor(x, y, bigRadius, smallRadius, labels, colors, targetsId) {
     this.x = x;
     this.y = y;
     this.bigRadius = bigRadius;
@@ -10,7 +10,6 @@ class ButtonCat {
     this.targetsId = targetsId;
     this.angleStep = TWO_PI / labels.length;
   }
-
 
   // Checks if a mouse click took place
   // within the target
@@ -22,8 +21,7 @@ class ButtonCat {
         angle += TWO_PI;
       }
       return floor(angle / this.angleStep);
-    }
-    else return -1;
+    } else return -1;
   }
 
   // Draws the target (i.e., a circle)
@@ -36,9 +34,17 @@ class ButtonCat {
       let labelX = this.x + (this.bigRadius + 20) * cos(labelAngle);
       let labelY = this.y + (this.bigRadius + 20) * sin(labelAngle);
       fill(this.colors[i]);
-      arc(this.x, this.y, this.bigRadius * 2, this.bigRadius * 2, start, stop, PIE);
+      arc(
+        this.x,
+        this.y,
+        this.bigRadius * 2,
+        this.bigRadius * 2,
+        start,
+        stop,
+        PIE
+      );
 
-      fill(this.colors[i]);
+      fill((255, 255, 255));
       textAlign(CENTER, CENTER);
       push();
       translate(labelX, labelY);
@@ -47,15 +53,17 @@ class ButtonCat {
       pop();
     }
     fill(0);
-    ellipse(this.x, this.y, this.smallRadius);  
+    ellipse(this.x, this.y, this.smallRadius);
   }
 
-
-  getTargets(index){
+  getTargets(index) {
     return this.targetsId[index];
   }
 
-  getTargets(){
+  getTargets() {
     return this.targetsId;
+  }
+  getColors() {
+    return this.colors;
   }
 }
