@@ -15,11 +15,13 @@ class ButtonCat {
   // within the target
   clicked(mouse_x, mouse_y) {
     let d = dist(mouse_x, mouse_y, this.x, this.y);
-    if (d < this.bigRadius && d > this.smallRadius) {
+    console.log(this.bigRadius, this.smallRadius,d);
+    if (d < this.bigRadius && d >= this.smallRadius) {
       let angle = atan2(mouse_y - this.y, mouse_x - this.x);
       if (angle < 0) {
         angle += TWO_PI;
       }
+      console.log("angle", angle);
       return floor(angle / this.angleStep);
     } else return -1;
   }
@@ -31,8 +33,8 @@ class ButtonCat {
       let start = this.angleStep * i;
       let stop = start + this.angleStep;
       let labelAngle = (start + stop) / 2;
-      let labelX = this.x + (this.bigRadius + 20) * cos(labelAngle);
-      let labelY = this.y + (this.bigRadius + 20) * sin(labelAngle);
+      let labelX = this.x + 2 * (this.bigRadius)/3 * cos(labelAngle);
+      let labelY = this.y + 2 * (this.bigRadius)/3 * sin(labelAngle);
       fill(this.colors[i]);
       arc(
         this.x,
@@ -45,15 +47,16 @@ class ButtonCat {
       );
 
       fill((255, 255, 255));
+      textFont("Arial", 20);
       textAlign(CENTER, CENTER);
       push();
       translate(labelX, labelY);
-      rotate(labelAngle + HALF_PI);
+      //rotate(labelAngle + HALF_PI);
       text(this.labels[i], 0, 0);
       pop();
     }
     fill(0);
-    ellipse(this.x, this.y, this.smallRadius);
+    ellipse(this.x, this.y, this.smallRadius * 2);
   }
 
   getTargets(index) {

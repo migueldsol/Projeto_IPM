@@ -7,7 +7,7 @@
 
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 11; // Add your group number here as an integer (e.g., 2, 3)
-const RECORD_TO_FIREBASE = false; // Set to 'true' to record user results to Firebase
+const RECORD_TO_FIREBASE = true; // Set to 'true' to record user results to Firebase
 
 // Pixel density and setup variables (DO NOT CHANGE!)
 let PPI, PPCM;
@@ -275,7 +275,7 @@ function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
     width / 2,
     height / 2,
     6 * PPCM,
-    3 * PPCM,
+    2 * PPCM,
     labels,
     categoryColors,
     [cat1List, cat2List, cat3List, cat4List, cat5List, cat6List]
@@ -283,7 +283,6 @@ function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
   createTargets(targetSize);
   let tempTargets = button.getTargets();
   let tempColors = button.getColors();
-  console.log(tempColors);
   for (let i = 0; i < tempTargets.length; i++) {
     giveTargetsPosition(
       targetSize,
@@ -463,6 +462,7 @@ function mousePressed() {
         resetTargets();
 
         draw_button = true;
+
         current_trial++; // Move on to the next trial/target
         break;
       } else if (
@@ -479,9 +479,13 @@ function mousePressed() {
 
     // Check if the user has completed all trials
     if (current_trial === NUM_OF_TRIALS) {
+      draw_targets = false;
+      draw_button = false;
+      
       testEndTime = millis();
-      draw_targets = false; // Stop showing targets and the user performance results
+
       printAndSavePerformance(); // Print the user's results on-screen and send these to the DB
+
       attempt++;
 
       // If there's an attempt to go create a button to start this
@@ -492,10 +496,12 @@ function mousePressed() {
           width / 2 - continue_button.size().width / 2,
           height / 2 - continue_button.size().height / 2
         );
+
       }
     }
     // Check if this was the first selection in an attempt
     else if (current_trial === 1) testStartTime = millis();
+
   } else if (draw_button) {
     varButton = button.clicked(mouseX, mouseY);
 
@@ -504,7 +510,7 @@ function mousePressed() {
       for (var i = 0; i < wantedTargets.length; i++) {
         targets[wantedTargets[i]].makeDrawable();
       }
-      draw_menu = false;
+      draw_button = false;
       draw_targets = true;
     }
   }
@@ -521,6 +527,8 @@ function continueTest() {
 
   current_trial = 0;
   continue_button.remove();
+
+  draw_button = true //draw the button again
 }
 
 // Creates and positions the UI targets
