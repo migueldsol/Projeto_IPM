@@ -235,9 +235,6 @@ const cat3List = [
   74, //Sweet Potato
 
   77, //Tomato
-
-  57, //Vanilla Yoghurt
-  78, //Vine Tomato
 ];
 
 const cat4List = [
@@ -261,8 +258,8 @@ function buttonSetup(horizontal_gap, vertical_gap, targetSize) {
   let labels = [
     "L, M, N, O",
     "P, R",
-    "S, T, V",
-    "W, Y, Z",
+    "S, T",
+    "V, W, Y, Z",
     "0, A, B",
     "C, F, G, K",
   ];
