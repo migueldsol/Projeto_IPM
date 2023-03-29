@@ -5,7 +5,7 @@ class Target {
     this.y = y;
     this.width = w;
     this.label = l;
-    this.my_color = color;
+    this.my_color = my_color;
     this.id = id;
   }
 
@@ -19,15 +19,22 @@ class Target {
   // and its label
   draw(grey) {
     // Draw target
+    if (!grey) {
+      fill("#ff1493");
+      circle(this.x, this.y, this.width+this.width/6);
+    }
     fill(this.my_color);
     circle(this.x, this.y, this.width);
     // Draw label
-    textFont("Arial", 22, 60);
+    textFont("Arial", 26, 60);
     if (grey) {fill(color(255, 255, 255));}
-    else {fill(color(255, 0, 0));}
+    else {fill(color(255, 255, 255));}
     textAlign(CENTER, TOP);
-    if (!grey) {text(this.label[0], this.x, this.y - this.width / 3);}
-    textFont("Arial", 12);
+    if (!grey) {
+      text(this.label[0], this.x, this.y - this.width / 3);
+      
+    }
+    textFont("Arial", 18);
     fill(color(255, 255, 255));
     textAlign(CENTER, CENTER);
     text(this.label, this.x, this.y);

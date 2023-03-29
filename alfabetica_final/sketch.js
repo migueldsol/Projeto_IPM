@@ -32,7 +32,7 @@ let attempt = 0; // users complete each test twice to account for practice (atte
 let last_first_letter = "";
 // Target list
 let targets = [];
-let grey = true;
+let grey = false;
 let ordered_list = [
   38, 53, 20, 28, 58, 59, 5, 6, 76, 68, 45, 37, 42, 41, 50, 48, 60, 11, 61, 34,
   52, 21, 62, 39, 33, 12, 63, 64, 0, 1, 22, 7, 65, 8, 9, 36, 10, 31, 55, 13, 71,
@@ -78,11 +78,8 @@ function draw() {
 
     // Draw all targets
     for (var i = 0; i < legendas.getRowCount(); i++) {
-      if (
-        i != 0 &&
-        targets[i].label[0] != targets[i - 1].label[0] &&
-        grey == true
-      ) {
+      if (i == 0) { grey = false; }
+      else if (targets[i].label[0] != targets[i - 1].label[0]) {
         grey = false;
       } else if (grey == false) {
         grey = true;
@@ -244,18 +241,24 @@ function createTargets(target_size, horizontal_gap, vertical_gap) {
 
       // Find the appropriate label and ID for this target
       let legendas_index = c + GRID_COLUMNS * r;
+      if (legendas_index != 0 && legendas.getString(ordered_list[legendas_index], 0)[0] !== legendas.getString(ordered_list[legendas_index-1], 0)[0]) {
+        console.log("i'm here!")  
+        if (rgbColor == 5) { rgbColor = 0; }
+        else { rgbColor += 1; }
+      }
       let target_label = legendas.getString(ordered_list[legendas_index], 0);
       let target_id = ordered_list[legendas_index];
-
+      let target_color = rgbColors[rgbColor];
       let target = new Target(
         target_x,
         target_y + 40,
         target_size,
         target_label,
-        target_color,
-        target_id
+        target_id,
+        target_color
       );
       targets.push(target);
+      console.log(target);
     }
   }
 }
