@@ -1,11 +1,12 @@
 // Target class (position and width)
 class Target {
-  constructor(x, y, w, l, id, my_color) {
+  constructor(x, y, w, l, id, my_color, my_darker_color) {
     this.x = x;
     this.y = y;
     this.width = w;
     this.label = l;
     this.my_color = my_color;
+    this.my_darker_color = my_darker_color;
     this.id = id;
   }
 
@@ -26,18 +27,18 @@ class Target {
     fill(this.my_color);
     circle(this.x, this.y, this.width);
     // Draw label
-    textFont("Arial", 26, 60);
-    if (grey) {fill(color(255, 255, 255));}
-    else {fill(color(255, 255, 255));}
-    textAlign(CENTER, TOP);
     if (!grey) {
-      text(this.label[0], this.x, this.y - this.width / 3);
+      textFont("Arial", 70);
+      fill(this.my_darker_color);
+      textAlign(CENTER, CENTER);
+      text(this.label[0], this.x, this.y+5);
       
     }
     textFont("Arial", 18);
     fill(color(255, 255, 255));
     textAlign(CENTER, CENTER);
     text(this.label, this.x, this.y);
+
   }
 
   showLabel() {

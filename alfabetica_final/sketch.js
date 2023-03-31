@@ -41,30 +41,52 @@ let ordered_list = [
 ];
 
 let rgbColors = [
-  '#000080', // Navy Blue
-  '#228B22', // Forest Green
-  '#4169E1', // Royal Blue
-  '#D2691E', // Chocolate Brown
-  '#DC143C', // Crimson Red
-  '#800080', // Deep Purple
-  '#B22222', // Firebrick Red
-  '#808000', // Olive Green
-  '#483D8B', // Dark Slate Blue
-  '#4B0082', // Indigo
 
-  '#8B008B', // Dark Magenta
-  '#008080', // Teal
-  '#800000', // Maroon
-
-  
-  '#008B8B', // Dark Cyan
-  '#B8860B', // Dark Goldenrod
-  
-  '#FF8C00', // Dark Orange
-  '#00CED1', // Dark Turquoise
-  '#9400D3', // Dark Violet
-  '#8B4513', // Saddle Brown
+  "#5FBDC2", //Electric Blue
+  "#FF7F50", //Coral Orange
+  "#32CD32", //Lime Green
+  "#7B3FDC", //Deep Purple
+  "#FFA07A", //Tangerine Orange
+  "#000080", //Navy Blue
+  "#FF00FF", //Magenta Pink
+  "#008080", //Teal Blue
+  "#3E7D00", //Chartreuse Green
+  "#61A132", //Forest Green
+  "#FF4500", //Mustard Yellow
+  "#0F52BA", //Sapphire Blue
+  "#FF0000", //Blood Red
+  "#E0115F", //Ruby Red
+  "#38C4B6", //Turquoise Blue
+  "#8B0000", //Rust Orange
+  "#B57EDC", //Lavender Purple
+  "#333333", //Charcoal Gray
+  "#FFD700", //Golden Yellow
+  "#4682B4" //Steel Blue
 ];
+
+let darkerRgbColors = [
+  "#3D8A8F",
+  "#CC4E2D",
+  "#2C8E2E",
+  "#5A298C",
+  "#BF640D",
+  "#00004C",
+  "#990099",
+  "#006666",
+  "#2E5D00",
+  "#478F1D",
+  "#8B3E00",
+  "#06294E",
+  "#8B0000",
+  "#930F3B",
+  "#168F7F",
+  "#6D3C00",
+  "#775AC8",
+  "#1A1A1A",
+  "#B89600",
+  "#2C577E"
+];
+
 let rgbColor = 0;
 
 // Ensures important data is loaded before the program starts
@@ -266,13 +288,15 @@ function createTargets(target_size, horizontal_gap, vertical_gap) {
       let target_label = legendas.getString(ordered_list[legendas_index], 0);
       let target_id = ordered_list[legendas_index];
       let target_color = rgbColors[rgbColor];
+      let target_darker_color = darkerRgbColors[rgbColor];
       let target = new Target(
         target_x,
         target_y + 40,
         target_size,
         target_label,
         target_id,
-        target_color
+        target_color,
+        target_darker_color
       );
       targets.push(target);
       console.log(target);
