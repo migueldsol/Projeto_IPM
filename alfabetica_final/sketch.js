@@ -41,12 +41,29 @@ let ordered_list = [
 ];
 
 let rgbColors = [
-  "#D32F2F", // (Crimson Red)
-  "#388E3C", // (Forest Green)
-  "#1A237E", // (Dark Blue)
-  "#FF9800", // (Orange)
-  "#2196F3", // (Sky Blue)
-  "#9C27B0", // (Purple)
+  '#000080', // Navy Blue
+  '#228B22', // Forest Green
+  '#4169E1', // Royal Blue
+  '#D2691E', // Chocolate Brown
+  '#DC143C', // Crimson Red
+  '#800080', // Deep Purple
+  '#B22222', // Firebrick Red
+  '#808000', // Olive Green
+  '#483D8B', // Dark Slate Blue
+  '#4B0082', // Indigo
+
+  '#8B008B', // Dark Magenta
+  '#008080', // Teal
+  '#800000', // Maroon
+
+  
+  '#008B8B', // Dark Cyan
+  '#B8860B', // Dark Goldenrod
+  
+  '#FF8C00', // Dark Orange
+  '#00CED1', // Dark Turquoise
+  '#9400D3', // Dark Violet
+  '#8B4513', // Saddle Brown
 ];
 let rgbColor = 0;
 
@@ -243,7 +260,7 @@ function createTargets(target_size, horizontal_gap, vertical_gap) {
       let legendas_index = c + GRID_COLUMNS * r;
       if (legendas_index != 0 && legendas.getString(ordered_list[legendas_index], 0)[0] !== legendas.getString(ordered_list[legendas_index-1], 0)[0]) {
         console.log("i'm here!")  
-        if (rgbColor == 5) { rgbColor = 0; }
+        if (rgbColor == 18) { rgbColor = 0; }
         else { rgbColor += 1; }
       }
       let target_label = legendas.getString(ordered_list[legendas_index], 0);
