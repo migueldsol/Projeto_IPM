@@ -42,9 +42,11 @@ let ordered_list = [
 
 let rgbColors = [
 
-  "#5FBDC2", //Electric Blue
   "#FF7F50", //Coral Orange
   "#32CD32", //Lime Green
+  
+  "#5FBDC2", //Electric Blue
+  
   "#7B3FDC", //Deep Purple
   "#FFA07A", //Tangerine Orange
   "#000080", //Navy Blue
@@ -65,22 +67,24 @@ let rgbColors = [
 ];
 
 let darkerRgbColors = [
-  "#3D8A8F",
+  
   "#CC4E2D",
   "#2C8E2E",
+  "#3D8A8F",
+  
   "#5A298C",
   "#BF640D",
   "#00004C",
   "#990099",
-  "#006666",
+  "#005555",
   "#2E5D00",
-  "#478F1D",
+  "#2E5F10",
   "#8B3E00",
   "#06294E",
   "#8B0000",
   "#930F3B",
   "#168F7F",
-  "#6D3C00",
+  "#470000",
   "#775AC8",
   "#1A1A1A",
   "#B89600",
